@@ -1,0 +1,284 @@
+/* ========================================
+   ORDER-SUCCESS.CSS - Order Confirmed Page
+   FitCheck Pink Theme
+   ======================================== */
+ 
+:root {
+    --primary: #ff3f6c;
+    --primary-dark: #e63458;
+    --success: #03a685;
+    --text-dark: #282c3f;
+    --text-light: #535766;
+    --text-muted: #94969f;
+    --bg-light: #f5f5f6;
+    --bg-white: #ffffff;
+    --border: #d4d5d9;
+    --border-light: #e9e9eb;
+}
+ 
+/* ========== ORDER SUCCESS SECTION ========== */
+.order-success-section {
+    background: var(--bg-light);
+    padding: 90px 20px;
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ 
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+ 
+/* ========== SUCCESS CARD ========== */
+.success-card {
+    background: var(--bg-white);
+    border-radius: 4px;
+    padding: 40px 40px;
+    text-align: center;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+}
+ 
+/* ========== SUCCESS ICON ========== */
+.success-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 32px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleIn 0.5s ease;
+}
+ 
+.success-icon i {
+    font-size: 48px;
+    color: var(--bg-white);
+}
+ 
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+ 
+/* ========== SUCCESS MESSAGE ========== */
+.success-card h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 12px 0;
+}
+ 
+.success-card > p {
+    font-size: 14px;
+    color: var(--text-light);
+    margin: 0 0 15px 0;
+}
+ 
+/* ========== ORDER NUMBER ========== */
+.order-number {
+    display: inline-block;
+    background: #fce8ec;
+    padding: 7px 15px;
+    border-radius: 4px;
+    margin-bottom: 0px;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+ 
+.order-number strong {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+}
+ 
+/* ========== DELIVERY INFO ========== */
+.delivery-info {
+    background: #e7f7f4;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 32px 0;
+    border-left: 4px solid var(--success);
+    text-align: left;
+}
+ 
+.delivery-info h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+ 
+.delivery-info h4 i {
+    color: var(--success);
+}
+ 
+.delivery-info p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin: 6px 0;
+    line-height: 1.6;
+}
+ 
+.delivery-info strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+ 
+/* ========== ORDER SUMMARY ========== */
+.order-summary {
+    background: var(--bg-light);
+    padding: 24px;
+    border-radius: 4px;
+    margin: 32px 0;
+    text-align: left;
+}
+ 
+.order-summary h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 16px 0;
+    text-align: center;
+}
+ 
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+ 
+.summary-row.discount span:last-child {
+    color: var(--success);
+}
+ 
+.summary-divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 12px 0;
+}
+ 
+.summary-row.total {
+    padding-top: 12px;
+    font-size: 16px;
+}
+ 
+.summary-row.total .amount {
+    color: var(--primary);
+    font-size: 20px;
+}
+ 
+/* ========== ACTION BUTTONS ========== */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 32px;
+}
+ 
+.btn-primary,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+ 
+.btn-primary {
+    background: var(--primary);
+    color: var(--bg-white);
+}
+ 
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 63, 108, 0.3);
+}
+ 
+.btn-secondary {
+    background: var(--bg-white);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+ 
+.btn-secondary:hover {
+    background: var(--primary);
+    color: var(--bg-white);
+}
+ 
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .success-card {
+        padding: 40px 24px;
+    }
+ 
+    .success-card h1 {
+        font-size: 24px;
+    }
+ 
+    .success-icon {
+        width: 80px;
+        height: 80px;
+    }
+ 
+    .success-icon i {
+        font-size: 40px;
+    }
+ 
+    .action-buttons {
+        flex-direction: column;
+    }
+ 
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+ 
+@media (max-width: 480px) {
+    .order-success-section {
+        padding: 20px 12px;
+    }
+ 
+    .success-card {
+        padding: 32px 20px;
+        border-radius: 0;
+    }
+ 
+    .success-card h1 {
+        font-size: 20px;
+    }
+ 
+    .order-number {
+        padding: 12px 20px;
+    }
+ 
+    .order-number strong {
+        font-size: 18px;
+    }
+ 
+    .delivery-info,
+    .order-summary {
+        padding: 20px;
+    }
+}

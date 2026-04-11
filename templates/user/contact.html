@@ -1,0 +1,100 @@
+{% extends "user/base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href=" {{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href=" {{ url_for('static', filename='css/common.css') }}">
+{% endblock %}
+
+
+<!--================= CONTACT HEADER =================-->
+<section>
+    <div id="contact-header">
+        <h1>Contact Us</h1>
+        <p>We’re here to help you with anything you need</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="contact-container">
+
+        <div class="contact-grid">
+
+            <!-- CONTACT INFO -->
+            <div class="contact-info">
+                <h2>Get In Touch</h2>
+
+                <div class="info-box">
+                    <i class="fa-solid fa-envelope"></i>
+                    <p>fitcheck48@gamil.com</p>
+                </div>
+
+                <div class="info-box">
+                    <i class="fa-solid fa-phone"></i>
+                    <p>+91 98765 43210</p>
+                </div>
+
+                <div class="info-box">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <p>India</p>
+                </div>
+
+                <div class="info-box">
+                    <i class="fa-brands fa-instagram"></i>
+                    <p>@fitcheck</p>
+                </div>
+            </div>
+
+            <!-- CONTACT FORM -->
+            <div class="contact-form">
+                <h2>Send Us a Message</h2>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                <p style="color: green;">{{ message }}</p>
+                {% endfor %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('user.contact') }}">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <input type="text" name="subject" placeholder="Subject">
+                    <textarea name="message" placeholder="Your Message"></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- GOOGLE MAP -->
+        <div class="map-section">
+            <h2>Our Location</h2>
+            <!-- Location change kari sako -->
+            <iframe src="https://www.google.com/maps?q=Ahmedabad,Gujarat,India&output=embed" loading="lazy">
+            </iframe>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_js %}
+
+<script>
+setTimeout(function () {
+    const msg = document.querySelector(".flash-message");
+    if (msg) {
+        msg.style.transition = "opacity 0.5s";
+        msg.style.opacity = "0";
+
+        setTimeout(() => msg.remove(), 500); // remove after fade
+    }
+}, 3000); // 3 seconds
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,58 @@
+{% extends "user/base.html" %}
+
+    {% block extra_css %}
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"> -->
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}"> -->
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/product-card.css') }}"> -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" /> -->
+
+    {% endblock %}
+
+{% block content %}
+
+<section id="products" class="products-category">
+
+{% for product in products %}
+
+  <div class="product-card" data-id="{{ product.pro_id }}">
+
+    <div class="product-img">
+      <a href="{{ url_for('user.product_details', pro_id=product.pro_id) }}">
+        <img src="{{ url_for('static', filename='uploads/products/' + product.image) }}">
+      </a>
+    </div>
+
+    <div class="product-info">
+      <h3>{{ product.brand }}</h3>
+
+      <p class="product-name">
+        <a href="{{ url_for('user.product_details', pro_id=product.pro_id) }}">
+          {{ product.pro_name }}
+        </a>
+      </p>
+
+      <div class="price">
+
+        {% if product.discount > 0 %}
+
+          <span class="final">₹{{ product.final_price }}</span>
+          <span class="mrp">₹{{ product.base_price }}</span>
+          <span class="off">{{ product.discount }}% OFF</span>
+
+        {% else %}
+
+          <span class="final">₹{{ product.base_price }}</span>
+
+        {% endif %}
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endfor %}
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "user/base.html" %}
+ 
+{% block title %}My Wishlist - FitCheck{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/wishlist.css') }}">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Breadcrumb -->
+<section id="breadcrumb">
+    <div class="breadcrumb-container">
+        <a href="{{ url_for('index') }}">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>My Wishlist</span>
+    </div>
+</section>
+ 
+<!-- Wishlist Section -->
+<section id="wishlist-section">
+    <div class="wishlist-container">
+        
+        <!-- Header -->
+        <div class="wishlist-header">
+            <div class="header-left">
+                <h1> Wishlist</h1>
+                <!-- <span class="item-count" id="wishlistCount">0 Items</span> -->
+            </div>
+            <button class="clear-all-btn" id="clearAllBtn" onclick="clearAllWishlist()" style="display: none;">
+                <i class="fas fa-trash"></i> Clear All
+            </button>
+        </div>
+ 
+        <!-- Wishlist Grid (populated by JavaScript) -->
+        <div class="wishlist-grid" id="wishlistGrid">
+            <!-- Items will be loaded here by JavaScript -->
+        </div>
+ 
+        <!-- Empty Wishlist (shown when no items) -->
+        <div class="empty-wishlist" id="emptyWishlist" style="display: none;">
+            <div class="empty-icon">
+                <i class="far fa-heart"></i>
+            </div>
+            <h2>Your wishlist is empty</h2>
+            <p>Save your favorite items here and never lose track of them</p>
+            <a href="{{ url_for('index') }}" class="btn-start-shopping">
+                <i class="fas fa-arrow-left"></i> Start Shopping
+            </a>
+        </div>
+ 
+    </div>
+</section>
+ 
+<!-- Success/Error Messages -->
+<div id="messageToast" class="message-toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="messageText"></span>
+</div>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="/static/js/cart.js"></script>
+<script src="{{ url_for('static', filename='js/wishlist.js') }}"></script>
+{% endblock %}

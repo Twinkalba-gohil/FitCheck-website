@@ -1,0 +1,165 @@
+{% extends "user/base.html" %}
+ 
+{% block title %}My Orders - FitCheck{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/orders.css') }}">
+ 
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Breadcrumb -->
+<section class="breadcrumb-section">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>My Orders</span>
+        </div>
+    </div>
+</section>
+ 
+<!-- Orders Section -->
+<section class="orders-section">
+    <div class="container">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>My Orders</h1>
+            <p>Track and manage your orders</p>
+        </div>
+ 
+        {% if orders %}
+        <!-- Orders List -->
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                
+                <!-- Order Header -->
+                <div class="order-header">
+                    <div class="order-info">
+                        <h3>Order #{{ order.order_id }}</h3>
+                        <div class="order-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                {{ order.created_at.strftime('%B %d, %Y') }}
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                {{ order.created_at.strftime('%I:%M %p') }}
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-box"></i>
+                                {{ order.order_details|length }} item(s)
+                            </span>
+                        </div>
+                    </div>
+                    <span class="status-badge {{ order.status }}">
+                        {% if order.status == 'pending' %}
+                            <i class="fas fa-clock"></i> Pending
+                        {% elif order.status == 'confirmed' %}
+                            <i class="fas fa-check"></i> Confirmed
+                        {% elif order.status == 'shipped' %}
+                            <i class="fas fa-shipping-fast"></i> Shipped
+                        {% elif order.status == 'delivered' %}
+                            <i class="fas fa-check-double"></i> Delivered
+                        {% elif order.status == 'cancelled' %}
+                            <i class="fas fa-times"></i> Cancelled
+                        {% endif %}
+                    </span>
+                </div>
+ 
+                <!-- Order Items -->
+                <div class="order-items">
+                    {% for detail in order.order_details %}
+                    <div class="order-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='uploads/products/' + detail.product.image) }}" 
+                                 alt="{{ detail.product.pro_name }}">
+                        </div>
+                        <div class="item-details">
+                            <h4 class="item-brand">{{ detail.product.brand }}</h4>
+                            <p class="item-name">{{ detail.product.pro_name }}</p>
+                            <div class="item-meta">
+                                <span><strong>Size:</strong> {{ detail.product.size }}</span>
+                                <span><strong>Qty:</strong> {{ detail.quantity }}</span>
+                                <span><strong>Price:</strong> ₹{{ detail.price }}</span>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            ₹{{ detail.price * detail.quantity }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+ 
+                <!-- Order Footer -->
+                <div class="order-footer">
+                    <div class="order-total">
+                        Total Amount: <strong>₹{{ order.net_amount }}</strong>
+                    </div>
+                    <div class="order-actions">
+                        <a href="{{ url_for('user.order_details', order_id=order.order_id) }}" class="btn-secondary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <a href="{{ url_for('user.download_invoice', order_id=order.order_id) }}" class="btn-primary">
+                            <i class="fas fa-download"></i> Invoice
+                        </a>
+                        {% if order.status == 'pending' %}
+                        <button onclick="cancelOrder({{ order.order_id }})" class="btn-danger">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+ 
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <i class="fas fa-shopping-bag"></i>
+            <h2>No Orders Yet</h2>
+            <p>You haven't placed any orders yet. Start shopping now!</p>
+            <a href="{{ url_for('index') }}" class="shop-now-btn">
+                <i class="fas fa-shopping-cart"></i> Start Shopping
+            </a>
+        </div>
+        {% endif %}
+ 
+    </div>
+</section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script>
+function cancelOrder(orderId) {
+    if (!confirm('Are you sure you want to cancel this order?')) {
+        return;
+    }
+ 
+    fetch(`/api/order/${orderId}/cancel`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('Order cancelled successfully');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to cancel order');
+    });
+}
+</script>
+{% endblock %}

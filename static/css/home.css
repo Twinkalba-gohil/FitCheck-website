@@ -1,0 +1,491 @@
+/* ========================================
+   HOME.CSS - Homepage specific styles
+   ======================================== */
+
+/* Add top margin to account for fixed header */
+/* body{
+    padding-top: 80px;
+} */
+
+/* ================= SLIDER ================= */
+#slider {
+    width: 100%;
+    display: flex;
+    padding: 20px 0px;
+    overflow: hidden;
+    position: relative;
+}
+
+.sliderimg {
+    min-width: 100%;
+    margin-top: 50PX;
+    padding: 10px;
+    height: 450px;
+    flex-shrink: 0;
+    display: block;
+    box-sizing: border-box;
+    /*animation: 15s sliderimages infinite;*/
+}
+
+.slider_image {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slider_image a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.sliderimg img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.btn-container {
+    position: absolute;
+    top: 60%;
+    transform: translateY(-50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.btn {
+    pointer-events: all;
+    padding: 35px 10px;
+    background-color: #fff;
+    font-size: 30px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-left {
+    left: 20px;
+}
+
+.btn-right {
+    right: 20px;
+}
+
+/*================== OFFER SECTION ================= */
+#offer {
+    width: 100%;
+    margin: 20px 0px 30px 0px;
+    padding: 0 60px;
+}
+
+#offer img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+}
+
+
+/* offer.css */
+/* ========================================
+   OFFER SECTION - Enhanced Multi-Banner Layout
+   ======================================== */
+
+/* ========== MAIN OFFER SECTION ========== */
+#offer-section {
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.offer-section-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.offer-section-title h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #282c3f;
+    margin-bottom: 10px;
+}
+
+.offer-section-title p {
+    font-size: 16px;
+    color: #7e818c;
+}
+
+/* ========== OFFER GRID LAYOUT ========== */
+.offer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ========== OFFER CARD ========== */
+.offer-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    height: 380px;
+    /* Fixed height for all cards */
+}
+
+.offer-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+/* Image container with fixed aspect ratio */
+.offer-card-image {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.offer-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Changed from cover to contain - prevents distortion */
+    object-position: center;
+    transition: transform 0.5s ease;
+    padding: 10px;
+    /* Small padding to prevent images from touching edges */
+}
+
+.offer-card:hover .offer-card-image img {
+    transform: scale(1.05);
+    /* Subtle zoom only */
+}
+
+/* Overlay on hover */
+.offer-card::after {
+    content: "Shop Now →";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(255, 63, 108, 0.95) 0%, rgba(255, 63, 108, 0.8) 50%, transparent 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 2;
+}
+
+.offer-card:hover::after {
+    transform: translateY(0);
+}
+
+/* Remove featured card styling - all cards same size now */
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 1200px) {
+    .offer-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 18px;
+        padding: 0 20px;
+    }
+
+    .offer-card {
+        height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    #offer-section {
+        padding: 40px 20px;
+    }
+
+    .offer-section-title h2 {
+        font-size: 28px;
+    }
+
+    .offer-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        padding: 0 10px;
+    }
+
+    .offer-card {
+        height: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+    .offer-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .offer-card {
+        height: 300px;
+    }
+
+    .offer-card-image img {
+        padding: 8px;
+    }
+}
+
+/* ========== ALTERNATIVE: EQUAL HEIGHT ROWS ========== */
+.offer-grid.equal-rows {
+    grid-auto-rows: 380px;
+}
+
+/* ========== LOADING ANIMATION ========== */
+.offer-card.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ========== MASONRY LAYOUT (ALTERNATIVE) ========== */
+.offer-grid.masonry {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-auto-rows: 250px;
+    gap: 20px;
+}
+
+.offer-grid.masonry .offer-card:nth-child(1) {
+    grid-row: span 2;
+}
+
+.offer-grid.masonry .offer-card:nth-child(5) {
+    grid-row: span 2;
+    grid-column: span 2;
+}
+
+.offer-grid.masonry .offer-card:nth-child(9) {
+    grid-row: span 2;
+}
+
+/* ========== SLIDER LAYOUT (ALTERNATIVE) ========== */
+.offer-slider-container {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.offer-slider {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+    padding: 10px 40px;
+}
+
+.offer-slider::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari */
+}
+
+.offer-slider .offer-card {
+    min-width: 350px;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+}
+
+/* Slider controls */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.slider-btn:hover {
+    background: #ff3f6c;
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-btn.prev {
+    left: 10px;
+}
+
+.slider-btn.next {
+    right: 10px;
+}
+
+/* ========== BENTO LAYOUT (MODERN PINTEREST-STYLE) ========== */
+.offer-grid.bento {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 200px;
+}
+
+.offer-grid.bento .offer-card:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.offer-grid.bento .offer-card:nth-child(4) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.offer-grid.bento .offer-card:nth-child(7) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.offer-grid.bento .offer-card:nth-child(10) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 1200px) {
+    .offer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 0 30px;
+    }
+
+    .offer-featured {
+        grid-column: span 1;
+    }
+
+    .offer-grid.bento {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    #offer-section {
+        padding: 40px 20px;
+    }
+
+    .offer-section-title h2 {
+        font-size: 28px;
+    }
+
+    .offer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        padding: 0 15px;
+    }
+
+    .offer-card-image {
+        height: 320px !important;
+    }
+
+    .offer-featured .offer-card-image {
+        height: 320px !important;
+    }
+
+    .offer-grid.bento {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .offer-slider .offer-card {
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .offer-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .offer-card-image {
+        height: 280px !important;
+    }
+
+    .offer-slider .offer-card {
+        min-width: 90vw;
+    }
+
+    .offer-grid.bento {
+        grid-template-columns: 1fr;
+    }
+
+    .offer-grid.bento .offer-card {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+    }
+}
+
+/* ========== LOADING ANIMATION ========== */
+.offer-card.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ========== VIEW MORE BUTTON ========== */
+.view-more-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.view-more-btn {
+    padding: 15px 40px;
+    background: #ff3f6c;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 63, 108, 0.3);
+}
+
+.view-more-btn:hover {
+    background: #e7335d;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 63, 108, 0.4);
+}

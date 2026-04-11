@@ -1,0 +1,176 @@
+{% extends "user/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!--=============SLIDER SECTION============= -->
+<section id="slider">
+  <div class="btn-container btn-left" onclick="prevSlide()">
+    <button class="btn"><i class="fa-solid fa-angle-left"></i></button>
+  </div>
+  <div class="slider_image">
+    <a href="#" class="sliderimg clone"><img src="{{ url_for('static', filename='images/banner1/7.png') }}"></a>
+    <a href="#" class="sliderimg"><img src="{{ url_for('static', filename='images/banner1/1.png') }}"
+        alt="Banner 1"></a>
+    <a href="#" class="sliderimg"><img src="{{ url_for('static', filename='images/banner1/2.png') }}"
+        alt="Banner 2"></a>
+    <a href="#" class="sliderimg"><img src="{{ url_for('static', filename='images/banner1/3.png') }}"
+        alt="Banner 3"></a>
+    <a href="#" class="sliderimg"><img src="{{ url_for('static', filename='images/banner1/4.png') }}"
+        alt="Banner 4"></a>
+    <a href="#" class="sliderimg"><img src="{{ url_for('static', filename='images/banner1/5.png') }}"
+        alt="Banner 5"></a>
+    <a href="#" class="sliderimg"><img src="{{ url_for('static', filename='images/banner1/6.png') }}"
+        alt="Banner 6"></a>
+    <a href="#" class="sliderimg"><img src="{{ url_for('static', filename='images/banner1/7.png') }}"
+        alt="Banner 7"></a>
+    <a href="#" class="sliderimg clone"><img src="{{ url_for('static', filename='images/banner1/1.png') }}"></a>
+  </div>
+  <div class="btn-container btn-right" onclick="nextSlide()">
+    <button class="btn"><i class="fa-solid fa-angle-right"></i></button>
+</section>
+
+<!--=============OFFER SECTION=============-->
+<!-- <section id="offer">
+  <a href="#">
+    <img src="{{ url_for('static', filename='images/banner1/8.jpg') }}" alt="">
+  </a>
+</section> -->
+
+<!--=============PRODUCT SECTION=============-->
+<h2 id="pro-header-first">Products for you</h2>
+<section id="products">
+  {% for product in products_top %}
+  <!-- PRODUCT CARD START -->
+  <div class="product-card" data-id="{{ product.pro_id }}">
+    <div class="product-img">
+      <a href="{{ url_for('user.product_details', pro_id=product.pro_id) }}">
+        <img src="{{ url_for('static', filename='uploads/products/' + product.image) }}" alt="">
+      </a>
+    </div>
+
+    <div class="product-info">
+      <h3>{{ product.brand }}</h3>
+      <p class="product-name">
+        <a href="{{ url_for('user.product_details', pro_id=product.pro_id) }}">
+          {{ product.pro_name }}
+        </a>
+      </p>
+      <div class="price">
+
+        {% if product.discount and product.discount > 0 %}
+
+        <span class="final-price">₹{{ product.final_price }}</span>
+        <span class="mrp">₹{{ product.base_price }}</span>
+        <span class="off">{{ product.discount }}% OFF</span>
+
+        {% else %}
+
+        <span class="final-price">₹{{ product.base_price }}</span>
+
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</section>
+
+<!--=============SHOP CATEGORY SECTION=============-->
+<section id="offer-section">
+
+  <div class="offer-section-title">
+    <h2>🔥 Special Offers & Deals</h2>
+    <p>Don't miss out on our amazing deals and exclusive offers!</p>
+  </div>
+
+  <div class="offer-grid">
+    <!-- Card 1 -->
+    <a href="{{ url_for('index') }}">
+
+      <div class="offer-card">
+        <div class="offer-card-image">
+          <img src="{{ url_for('static', filename='images/offer/1.png') }}" alt="Saree Collection Sale">
+        </div>
+      </div>
+    </a>
+
+    <a href="{{ url_for('index') }}">
+
+      <!-- Card 2 - Featured -->
+      <div class="offer-card offer-featured">
+        <div class="offer-card-image">
+          <img src="{{ url_for('static', filename='images/offer/2.png') }}" alt="Fashion Sale">
+        </div>
+      </div>
+    </a>
+
+    <a href="{{ url_for('index') }}">
+
+      <!-- Card 3 -->
+      <div class="offer-card">
+        <div class="offer-card-image">
+          <img src="{{ url_for('static', filename='images/offer/3.png') }}" alt="Men's Fashion">
+        </div>
+      </div>
+    </a>
+
+    <a href="{{ url_for('index') }}">
+
+      <!-- Card 8 -->
+      <div class="offer-card">
+        <div class="offer-card-image">
+          <img src="{{ url_for('static', filename='images/offer/10.png') }}" alt="New Look">
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<h2 id="pro-header">Products</h2>
+
+<section id="products">
+  {% for product in products_bottom %}
+  <!-- PRODUCT CARD START -->
+  <div class="product-card" data-id="{{ product.pro_id }}">
+    <div class="product-img">
+      <a href="{{ url_for('user.product_details', pro_id=product.pro_id) }}">
+        <img src="{{ url_for('static', filename='uploads/products/' + product.image) }}" alt="">
+      </a>
+    </div>
+
+    <div class="product-info">
+      <h3>{{ product.brand }}</h3>
+      <p class="product-name">
+        <a href="{{ url_for('user.product_details', pro_id=product.pro_id) }}">
+          {{ product.pro_name }}
+        </a>
+      </p>
+      <div class="price">
+
+        {% if product.discount and product.discount > 0 %}
+
+        <span class="final-price">₹{{ product.final_price }}</span>
+        <span class="mrp">₹{{ product.base_price }}</span>
+        <span class="off">{{ product.discount }}% OFF</span>
+
+        {% else %}
+
+        <span class="final-price">₹{{ product.base_price }}</span>
+
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</section>
+
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/products-data.js') }}"></script> -->
+<!-- <script src="{{ url_for('static', filename='js/offer.js') }}"></script> -->
+
+
+{% endblock %}

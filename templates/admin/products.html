@@ -1,0 +1,193 @@
+{% extends "admin/base.html" %}
+{% block title %}Products{% endblock %}
+{%block content %}
+
+
+<!--  Top Bar  -->
+<div class="top-bar">
+  <div class="page-header">
+    <h1>Products Management</h1>
+    <p>Manage your product inventory and details</p>
+  </div>
+
+  <div class="top-bar-right">
+    <form method="GET" action="{{ url_for('admin.products') }}" class="search-bar">
+    <i class="fas fa-search"></i>
+    <input 
+        type="text" 
+        name="search"
+        placeholder="Search products..." 
+        value="{{ search }}"
+    />
+</form>
+
+    <!-- <button class="icon-btn">
+      <i class="fas fa-bell"></i>
+      <span class="badge">12</span>
+    </button> -->
+
+    <!-- <div class="user-profile">
+      <div class="user-avatar">AD</div>
+      <div class="user-info">
+        <h4>Admin User</h4>
+        <p>Administrator</p>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+<!-- Content Area -->
+<div class="content-area">
+  <!-- Products Header -->
+  <div class="products-header">
+    <div class="products-stats">
+      <div class="stat-mini">
+        <i class="fas fa-box"></i>
+        <div>
+          <h4>Total Products</h4>
+          <h2>{{ products_count }}</h2>
+        </div>
+      </div>
+      <!-- <div class="stat-mini">
+        <i class="fas fa-check-circle"></i>
+        <div>
+          <h4>In Stock</h4>
+          <h2>298</h2>
+        </div>
+      </div> -->
+      <!-- <div class="stat-mini">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>
+          <h4>Low Stock</h4>
+          <h2>44</h2>
+        </div>
+      </div> -->
+    </div>
+    <!-- <button class="btn-add-product" id="addProductBtn">
+  <i class="fas fa-plus"></i>
+  Add New Product
+</button> -->
+    <a href="{{ url_for('admin.add_product') }}" class="btn-add-product">
+      <i class="fas fa-plus"></i>
+      Add New Product
+    </a>
+  </div>
+
+  <!-- Products Table -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">All Products</h2>
+      <div class="filter-group">
+        <select class="filter-select">
+          <option>All Categories</option>
+          <option>Men's Wear</option>
+          <option>Women's Wear</option>
+          <option>Footwear</option>
+          <option>Accessories</option>
+        </select>
+        <!-- <select class="filter-select">
+          <option>All Brands</option>
+          <option>Nike</option>
+          <option>Adidas</option>
+          <option>Puma</option>
+          <option>Zara</option>
+        </select> -->
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Size</th>
+            <th>Price</th>
+            <th>Brand</th>
+            <!-- <th>Sub-Category</th> -->
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productsTableBody">
+          {% for product in products %}
+          <tr>
+            <!-- Product ID -->
+            <td>{{ product.pro_id }}</td>
+
+            <!-- Product Name + Image -->
+            <td>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <img src="{{ url_for('static', filename='uploads/products/' + product.image) }}" width="50" height="50"
+                  style="object-fit: cover; border-radius: 6px" />
+                <span id="product-name">{{ product.pro_name }}</span>
+              </div>
+            </td>
+
+            <!-- Description -->
+            <td class="description-cell">{{ product.description }}</td>
+
+            <!-- Size -->
+            <td>
+              <span class="size-badge">{{ product.size }}</span>
+            </td>
+
+            <!-- Price -->
+            <td>₹{{ product.base_price }}</td>
+
+            <!-- Brand -->
+            <td>{{ product.brand }}</td>
+
+            <!-- Sub Category -->
+            <!-- <td>
+              <span class="category-tag">
+                {{ product.subcategory.name }}
+              </span>
+            </td> -->
+
+            <!-- Actions -->
+            <td class="action-buttons">
+              <!-- EDIT -->
+              <a href="{{ url_for('admin.edit_product', pro_id=product.pro_id) }}" style="text-decoration: none;">  
+
+                <button type="button" class="btn-edit">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+              </a>
+
+              <!-- DELETE -->
+              <form method="POST" action="{{ url_for('admin.delete_product', pro_id=product.pro_id) }}"
+                style="display: inline" onsubmit="return confirm('Are you sure?');">
+                <button type="submit" class="btn-delete">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- Pagination -->
+    <!-- <div class="pagination">
+      <button class="page-btn" disabled>
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">4</button>
+      <button class="page-btn">5</button>
+      <button class="page-btn">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div> -->
+  </div>
+</div>
+</main>
+
+
+<!-- <script src="dashboard.js"></script> -->
+<script src="{{ url_for('static', filename='js/products.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome back! Here's what's happening {{ filter_label.lower() }}.</p>
+    </div>
+
+    <div class="top-bar-right">
+        <!-- Date Filter Dropdown -->
+        <div class="filter-dropdown">
+            <button class="filter-btn" onclick="toggleFilterDropdown()">
+                <i class="fas fa-calendar-alt"></i>
+                <span>{{ filter_label }}</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="filter-dropdown-menu" id="filterDropdown">
+                 <a href="{{ url_for('admin.dashboard', filter='1days') }}" 
+                   class="filter-option {% if date_filter == '1days' %}active{% endif %}">
+                    <i class="fas fa-calendar-week"></i>
+                    Last 1 Days
+                </a>
+                <a href="{{ url_for('admin.dashboard', filter='7days') }}" 
+                   class="filter-option {% if date_filter == '7days' %}active{% endif %}">
+                    <i class="fas fa-calendar-week"></i>
+                    Last 7 Days
+                </a>
+                <a href="{{ url_for('admin.dashboard', filter='30days') }}" 
+                   class="filter-option {% if date_filter == '30days' %}active{% endif %}">
+                    <i class="fas fa-calendar-day"></i>
+                    Last 30 Days
+                </a>
+                <a href="{{ url_for('admin.dashboard', filter='90days') }}" 
+                   class="filter-option {% if date_filter == '90days' %}active{% endif %}">
+                    <i class="fas fa-calendar"></i>
+                    Last 90 Days
+                </a>
+                <div class="filter-divider"></div>
+                <a href="{{ url_for('admin.dashboard', filter='all') }}" 
+                   class="filter-option {% if date_filter == 'all' %}active{% endif %}">
+                    <i class="fas fa-infinity"></i>
+                    All Time
+                </a>
+            </div>
+        </div>
+
+        <!-- <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-info">
+                <h4>Admin User</h4>
+                <p>Administrator</p>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<!-- Content Area -->
+<div class="content-area">
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+
+        <a href="{{ url_for('admin.orders') }}" class="card-link" style="text-decoration-line: none;">
+            <div class="stat-card success">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-title">Total Orders</div>
+                        <div class="stat-value">{{ orders }}</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>{{ filter_label }}</span>
+                        </div>
+                    </div>
+                    <div class="stat-icon success">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <a href="{{ url_for('admin.customers') }}" class="card-link" style="text-decoration-line: none;">
+            <div class="stat-card warning">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-title">Total Customers</div>
+                        <div class="stat-value">{{ users }}</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-users"></i>
+                            <span>{{ filter_label }}</span>
+                        </div>
+                    </div>
+                    <div class="stat-icon warning">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <a href="{{ url_for('admin.products') }}" class="card-link" style="text-decoration-line: none;">
+            <div class="stat-card info">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-title">Total Products</div>
+                        <div class="stat-value">{{ products_count }}</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-box"></i>
+                            <span>{{ filter_label }}</span>
+                        </div>
+                    </div>
+                    <div class="stat-icon info">
+                        <i class="fas fa-box"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <!-- NEW: Revenue Card -->
+        <!-- <div class="stat-card primary">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-title">Total Revenue</div>
+                    <div class="stat-value">₹{{ "%.2f"|format(total_revenue) }}</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-rupee-sign"></i>
+                        <span>{{ filter_label }}</span>
+                    </div>
+                </div> -->
+                <!-- <div class="stat-icon primary"> -->
+                    <!-- <i class="fas fa-rupee-sign"></i> -->
+                <!-- </div> -->
+            <!-- </div>
+        </div> -->
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Recent Orders ({{ filter_label }})</h2>
+            <a href="{{ url_for('admin.orders') }}" class="view-all">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="table-container">
+            {% if recent_orders %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td><strong>#ORD-{{ order.order_id }}</strong></td>
+
+                        <td>
+                            {% if order.order_details %}
+                            {% set item = order.order_details[0] %}
+                            {% if item.product %}
+                            <div class="product-cell">
+                                <img src="{{ url_for('static', filename='uploads/products/' + item.product.image) }}"
+                                    class="product-img">
+                                <div>
+                                    <div class="product-name">{{ item.product.pro_name }}</div>
+                                    <div class="product-category">
+                                        {{ item.product.subcategory.subcat_name }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <span>Product not found</span>
+                            {% endif %}
+                            {% else %}
+                            <span>No product</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ order.user.username }}</td>
+
+                        <td>
+                            <div class="order-date">
+                                <i class="fas fa-calendar"></i>
+                                {{ order.created_at.strftime('%b %d, %Y') }}
+                            </div>
+                            <div class="order-time">
+                                {{ order.created_at.strftime('%I:%M %p') }}
+                            </div>
+                        </td>
+
+                        <td><strong>₹{{ order.net_amount }}</strong></td>
+
+                        <td>
+                            <span class="status-badge">
+                                {{ order.status }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <a href="{{ url_for('admin.order_details', order_id=order.order_id) }}" 
+                               class="action-btn" style="text-decoration-line: none;">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No orders found</h3>
+                <p>No orders in {{ filter_label.lower() }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+{% endblock %}

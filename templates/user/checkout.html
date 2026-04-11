@@ -1,0 +1,255 @@
+{% extends "user/base.html" %}
+ 
+{% block title %}Checkout - FitCheck{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/checkout.css') }}">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Breadcrumb -->
+<section id="breadcrumb">
+    <div class="breadcrumb-container">
+        <a href="{{ url_for('index') }}">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="{{ url_for('user.cart') }}">Shopping Bag</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Checkout</span>
+    </div>
+</section>
+ 
+<!-- Checkout Section -->
+<section id="checkout-section">
+    <div class="checkout-container">
+        
+        <!-- Left Side - Checkout Forms -->
+        <div class="checkout-forms-section">
+            
+            <!-- Step Indicator -->
+            <div class="checkout-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-info">
+                        <span class="step-title">Delivery Address</span>
+                    </div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-info">
+                        <span class="step-title">Order Summary</span>
+                    </div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-info">
+                        <span class="step-title">Payment</span>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Step 1: Delivery Address -->
+            <div class="checkout-step-content" id="step1" style="display: block;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
+                    </div>
+ 
+                    <!-- User's Default Address (from database) -->
+                    <div class="address-card selected" id="defaultAddress">
+                        <span class="address-type">Default Address</span>
+                        <div class="address-name">{{ user.username }}</div>
+                        <div class="address-mobile">{{ user.contact }}</div>
+                        <div class="address-details">
+                            {{ user.address }}, {{ user.area_name }}<br>
+                            {{ user.city.city_name if user.city else 'City' }}, 
+                            {{ user.state.state_name if user.state else 'State' }} - {{ user.pincode }}
+                        </div>
+                    </div>
+ 
+                    <!-- Continue Button -->
+                    <div class="step-action">
+                        <button class="btn-continue" onclick="goToStep(2)">
+                            Continue to Order Summary <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Step 2: Order Summary -->
+            <div class="checkout-step-content" id="step2" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3><i class="fas fa-box"></i> Order Summary</h3>
+                        <button class="edit-btn" onclick="goToStep(1)">
+                            <i class="fas fa-edit"></i> Change Address
+                        </button>
+                    </div>
+ 
+                    <!-- Selected Address Display -->
+                    <div class="selected-address-display">
+                        <h4>Delivering To</h4>
+                        <div class="address-name">{{ user.username }}</div>
+                        <div class="address-mobile">{{ user.contact }}</div>
+                        <div class="address-details">
+                            {{ user.address }}, {{ user.area_name }}<br>
+                            {{ user.city.city_name if user.city else 'City' }}, 
+                            {{ user.state.state_name if user.state else 'State' }} - {{ user.pincode }}
+                        </div>
+                    </div>
+ 
+                    <!-- Order Items -->
+                    <div class="order-items-section">
+                        <h4>Items in Your Order (<span id="orderItemCount">0</span>)</h4>
+                        <div id="orderItemsList">
+                            <!-- Order items will be loaded here by JavaScript from cart -->
+                        </div>
+                    </div>
+ 
+                    <!-- Continue Button -->
+                    <div class="step-action">
+                        <button class="btn-continue" onclick="goToStep(3)">
+                            Continue to Payment <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Step 3: Payment -->
+            <div class="checkout-step-content" id="step3" style="display: none;">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3><i class="fas fa-credit-card"></i> Payment Options</h3>
+                    </div>
+ 
+                    <form id="paymentForm" onsubmit="return false;">
+                        <div class="payment-options">
+                            
+                            <!-- Cash on Delivery -->
+                            <div class="payment-option" onclick="selectPaymentMethod('CASH')">
+                                <div class="payment-radio">
+                                    <input type="radio" name="payment" id="cod" value="CASH" required>
+                                    <label for="cod">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <div class="payment-info">
+                                            <span class="payment-title">Cash on Delivery</span>
+                                            <span class="payment-subtitle">Pay when you receive</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+ 
+                            <!-- UPI -->
+                            <div class="payment-option" onclick="selectPaymentMethod('UPI')">
+                                <div class="payment-radio">
+                                    <input type="radio" name="payment" id="upi" value="UPI" required>
+                                    <label for="upi">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <div class="payment-info">
+                                            <span class="payment-title">UPI</span>
+                                            <span class="payment-subtitle">Google Pay, PhonePe, Paytm & more</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+ 
+                            <!-- Credit/Debit Card -->
+                            <div class="payment-option" onclick="selectPaymentMethod('CARD')">
+                                <div class="payment-radio">
+                                    <input type="radio" name="payment" id="card" value="CARD" required>
+                                    <label for="card">
+                                        <i class="fas fa-credit-card"></i>
+                                        <div class="payment-info">
+                                            <span class="payment-title">Credit / Debit Card</span>
+                                            <span class="payment-subtitle">Visa, Mastercard, Rupay & more</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+ 
+                            <!-- Net Banking -->
+                            <div class="payment-option" onclick="selectPaymentMethod('NETBANKING')">
+                                <div class="payment-radio">
+                                    <input type="radio" name="payment" id="netbanking" value="NETBANKING" required>
+                                    <label for="netbanking">
+                                        <i class="fas fa-university"></i>
+                                        <div class="payment-info">
+                                            <span class="payment-title">Net Banking</span>
+                                            <span class="payment-subtitle">All major banks supported</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+ 
+                        </div>
+ 
+                        <!-- Place Order Button -->
+                        <div class="step-action">
+                            <button type="button" class="btn-place-order" onclick="placeOrder()" disabled id="placeOrderBtn">
+                                <i class="fas fa-lock"></i> PLACE ORDER
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+ 
+        </div>
+ 
+        <!-- Right Side - Order Summary Card -->
+        <div class="checkout-summary-section">
+            <div class="summary-card sticky-summary">
+                <h3>Price Details</h3>
+                
+                <div class="summary-row">
+                    <span>Total MRP</span>
+                    <span id="summaryMRP">₹0</span>
+                </div>
+ 
+                <div class="summary-row">
+                    <span>Discount on MRP</span>
+                    <span class="discount-text" id="summaryDiscount">-₹0</span>
+                </div>
+ 
+                <div class="summary-row">
+                    <span>Delivery Charges</span>
+                    <span class="free-text" id="summaryDelivery">FREE</span>
+                </div>
+ 
+                <div class="summary-divider"></div>
+ 
+                <div class="summary-row total-row">
+                    <span>Total Amount</span>
+                    <span id="summaryTotal">₹0</span>
+                </div>
+ 
+                <div class="savings-badge" id="savingsBadge" style="display: none;">
+                    <i class="fas fa-tag"></i> You will save ₹<span id="totalSavings">0</span> on this order
+                </div>
+            </div>
+ 
+            <!-- Safe & Secure -->
+            <div class="secure-badge">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>Safe and Secure Payments</strong>
+                    <p>100% Payment Protection</p>
+                </div>
+            </div>
+        </div>
+ 
+    </div>
+</section>
+ 
+<!-- Hidden form data for user info -->
+<input type="hidden" id="userId" value="{{ user.u_id }}">
+<input type="hidden" id="userName" value="{{ user.username }}">
+<input type="hidden" id="userContact" value="{{ user.contact }}">
+<input type="hidden" id="userAddress" value="{{ user.address }}, {{ user.area_name }}, {{ user.city.city_name if user.city else 'City' }}, {{ user.state.state_name if user.state else 'State' }} - {{ user.pincode }}">
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/checkout.js') }}"></script>
+{% endblock %}

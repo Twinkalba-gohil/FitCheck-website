@@ -1,0 +1,288 @@
+{% extends "admin/base.html" %}
+ 
+{% block title %}Orders - Admin{% endblock %}
+ 
+{% block extra_css %}
+<style>
+/* Orders Page Styles */
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    flex-wrap: wrap;
+}
+ 
+.filter-tab {
+    padding: 10px 20px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--text-light);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 14px;
+}
+ 
+.filter-tab:hover,
+.filter-tab.active {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+ 
+.status-select {
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: white;
+    transition: all 0.3s;
+}
+ 
+.status-select:hover {
+    border-color: var(--primary);
+}
+ 
+.status-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+ 
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+ 
+.empty-state i {
+    font-size: 64px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+ 
+.empty-state h3 {
+    font-size: 20px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+ 
+.empty-state p {
+    color: var(--text-light);
+}
+
+.action-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1;
+
+}
+</style>
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="page-header">
+        <h1>Order Management</h1>
+        <p>View and manage customer orders</p>
+    </div>
+ 
+    <div class="top-bar-right">
+        <!-- <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search orders...">
+        </div> -->
+ 
+        <!-- <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-info">
+                <h4>Admin User</h4>
+                <p>Administrator</p>
+            </div>
+        </div> -->
+    </div>
+</div>
+ 
+<!-- Content Area -->
+<div class="content-area">
+    
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <a href="{{ url_for('admin.orders', status='all') }}" 
+           class="filter-tab {{ 'active' if status_filter == 'all' else '' }}">
+            <i class="fas fa-list"></i> All Orders
+        </a>
+        <a href="{{ url_for('admin.orders', status='pending') }}" 
+           class="filter-tab {{ 'active' if status_filter == 'pending' else '' }}">
+            <i class="fas fa-clock"></i> Pending
+        </a>
+        <a href="{{ url_for('admin.orders', status='confirmed') }}" 
+           class="filter-tab {{ 'active' if status_filter == 'confirmed' else '' }}">
+            <i class="fas fa-check-circle"></i> Confirmed
+        </a>
+        <a href="{{ url_for('admin.orders', status='shipped') }}" 
+           class="filter-tab {{ 'active' if status_filter == 'shipped' else '' }}">
+            <i class="fas fa-shipping-fast"></i> Shipped
+        </a>
+        <a href="{{ url_for('admin.orders', status='delivered') }}" 
+           class="filter-tab {{ 'active' if status_filter == 'delivered' else '' }}">
+            <i class="fas fa-check-double"></i> Delivered
+        </a>
+        <a href="{{ url_for('admin.orders', status='cancelled') }}" 
+           class="filter-tab {{ 'active' if status_filter == 'cancelled' else '' }}">
+            <i class="fas fa-times-circle"></i> Cancelled
+        </a>
+    </div>
+ 
+    <!-- Orders Table -->
+    {% if orders %}
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">
+                {% if status_filter == 'all' %}
+                    All Orders
+                {% else %}
+                    {{ status_filter|capitalize }} Orders
+                {% endif %}
+                <span style="color: var(--text-light); font-weight: 500; font-size: 14px;">({{ orders|length }})</span>
+            </h2>
+        </div>
+ 
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Total Amount</th>
+                        <th>Net Amount</th>
+                        <th>Payment</th>
+                        <th>Payment Status</th>
+                        <th>Order Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.order_id }}</strong></td>
+                        <td>
+                            <div class="product-cell">
+                                <div class="customer-avatar" style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                                    {{ order.user.username[0]|upper }}
+                                </div>
+                                <div>
+                                    <div class="product-name">{{ order.user.username }}</div>
+                                    <div class="product-category">{{ order.user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>₹{{ order.total_amount }}</td>
+                        <td><strong>₹{{ order.net_amount }}</strong></td>
+                        <td>{{ order.payment.method if order.payment else 'N/A' }}</td>
+                        <td>
+                            <span class="status-badge {{ 'success' if order.payment and order.payment.status == 'completed' else 'warning' }}">
+                                {{ order.payment.status|capitalize if order.payment else 'Pending' }}
+                            </span>
+                        </td>
+                        <td>
+                            <select class="status-select" onchange="updateOrderStatus({{ order.order_id }}, this.value)">
+                                <option value="pending" {{ 'selected' if order.status == 'pending' else '' }}>Pending</option>
+                                <option value="confirmed" {{ 'selected' if order.status == 'confirmed' else '' }}>Confirmed</option>
+                                <option value="shipped" {{ 'selected' if order.status == 'shipped' else '' }}>Shipped</option>
+                                <option value="delivered" {{ 'selected' if order.status == 'delivered' else '' }}>Delivered</option>
+                                <option value="cancelled" {{ 'selected' if order.status == 'cancelled' else '' }}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.order_details', order_id=order.order_id) }}" class="action-btn">
+                                <i class="fas fa-eye"></i>
+                                 View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No orders found</h3>
+            <p>No orders match the current filter.</p>
+        </div>
+    </div>
+    {% endif %}
+ 
+</div>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script>
+function updateOrderStatus(orderId, newStatus) {
+    if (!confirm(`Change order status to ${newStatus}?`)) {
+        location.reload();
+        return;
+    }
+ 
+    fetch(`/admin/api/orders/${orderId}/update-status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message, 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('Error: ' + data.message, 'error');
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Failed to update order status', 'error');
+        location.reload();
+    });
+}
+ 
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        background: ${type === 'success' ? 'linear-gradient(135deg, #10B981, #34D399)' : 'linear-gradient(135deg, #EF4444, #DC2626)'};
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.remove(), 3000);
+}
+</script>
+{% endblock %}

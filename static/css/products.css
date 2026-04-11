@@ -1,0 +1,250 @@
+/* Product name */
+#product-name{
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    line-height:1.4;
+    max-height:4.2em;
+    max-width:200px;
+    font-weight:400;
+    color:var(--text-dark);
+    white-space:normal;
+}
+
+/* Products Header */
+.products-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:32px;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.products-stats{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.stat-mini{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:var(--white);
+    padding:20px 24px;
+    border-radius:16px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.06);
+}
+
+.stat-mini i{
+    font-size:32px;
+    width:56px;
+    height:56px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:var(--white);
+}
+
+.stat-mini h4{
+    font-size:13px;
+    color:var(--text-light);
+    font-weight:600;
+    margin-bottom:4px;
+}
+
+.stat-mini h2{
+    font-size:28px;
+    font-weight:800;
+    color:var(--text-dark);
+}
+
+/* Add Product Button */
+.btn-add-product{
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:var(--white);
+    padding:16px 32px;
+    border-radius:12px;
+    border:none;
+    font-weight:700;
+    font-size:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    text-decoration:none;
+}
+
+/* Filter */
+.filter-group{
+    display:flex;
+    gap:12px;
+}
+
+.filter-select{
+    padding:10px 16px;
+    border:2px solid var(--border);
+    border-radius:10px;
+    background:var(--white);
+    font-weight:600;
+    font-size:14px;
+}
+
+/* Table */
+.products-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+.products-table thead{
+    background:linear-gradient(135deg,var(--light),#EEF2FF);
+}
+
+.products-table th{
+    padding:16px 20px;
+    text-align:left;
+    font-size:12px;
+    font-weight:800;
+    color:var(--text-light);
+    text-transform:uppercase;
+}
+
+/* Description */
+.description-cell{
+    max-width:300px;
+    color:var(--text-light);
+    font-size:13px;
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+}
+
+/* Size badge */
+.size-badge{
+    display:inline-block;
+    padding:6px 12px;
+    background:rgba(99,102,241,0.1);
+    color:var(--primary);
+    border-radius:8px;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* Category tag */
+.category-tag{
+    display:inline-block;
+    padding:6px 14px;
+    background:linear-gradient(135deg,var(--success),#34D399);
+    color:var(--white);
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* Action buttons */
+.action-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.btn-edit,
+.btn-delete{
+    padding:8px 16px;
+    border-radius:8px;
+    border:none;
+    font-weight:700;
+    font-size:12px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.btn-edit{
+    background:linear-gradient(135deg,var(--info),#60A5FA);
+    color:var(--white);
+}
+
+.btn-delete{
+    background:linear-gradient(135deg,var(--danger),#DC2626);
+    color:var(--white);
+}
+
+/* Pagination */
+.pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin-top:32px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+}
+
+.page-btn{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    border:2px solid var(--border);
+    background:var(--white);
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.page-btn.active{
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:var(--white);
+    border:none;
+}
+
+/* Table container */
+.table-container{
+    width:100%;
+    overflow:hidden;
+}
+
+/* Fix table overflow */
+/* .products-table{
+    min-width:1100px;
+} */
+
+.products-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+
+/* Keep actions inline */
+.action-buttons{
+    white-space:nowrap;
+}
+
+/* Prevent ID break */
+.products-table td:first-child{
+    white-space:nowrap;
+}
+
+/* Product image alignment */
+.products-table td div{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.products-table td{
+    border:none;
+    padding:16px 20px;
+}
+
+.products-table tbody tr{
+    border-bottom:1px solid #e5e7eb;
+}

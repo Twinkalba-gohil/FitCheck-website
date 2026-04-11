@@ -1,0 +1,112 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Customers - Admin{% endblock %}
+
+{% block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer.css') }}">
+{% endblock %}
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="page-header">
+        <h1>Customer Management</h1>
+        <p>View and manage your customers</p>
+    </div>
+
+    <div class="top-bar-right">
+        <!-- <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="customerSearch" placeholder="Search customers..." onkeyup="searchCustomers()">
+        </div> -->
+
+        <!-- <button class="icon-btn">
+            <i class="fas fa-bell"></i>
+            <span class="badge">12</span>
+        </button> -->
+
+        <!-- <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-info">
+                <h4>Admin User</h4>
+                <p>Administrator</p>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<!-- Content Area -->
+<div class="content-area">
+
+    <!-- Filters -->
+    <div class="filters-container">
+        
+        
+    </div>
+
+    <!-- Customers Table -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">All Customers</h2>
+        </div>
+
+        <div class="table-container">
+            <table id="customersTable">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <!-- <th>Phone</th> -->
+                        <!-- <th>Orders</th> -->
+                        <!-- <th>Total Spent</th> -->
+                        <!-- <th>Status</th> -->
+                        <!-- <th>Actions</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">{{ customer.username[0]|upper }}</div>
+                                <div>
+                                    <div class="customer-name">{{ customer.username }}</div>
+                                    <div class="customer-email">Member since {{ customer.created_at.strftime('%b %Y') if customer.created_at else 'N/A' }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ customer.email }}</td>
+                        <!-- <td>{{ customer.phone or 'N/A' }}</td> -->
+                        <!-- <td><strong>{{ customer.orders_count or 0 }}</strong></td> -->
+                        <!-- <td><strong>₹{{ customer.total_spent or 0 }}</strong></td> -->
+                        
+                        <!-- <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-view" onclick="viewCustomer('{{ customer.user_id }}')" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editCustomer('{{ customer.user_id }}')" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteCustomer('{{ customer.user_id }}')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td> -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+    {% block extra_js %}
+        <script src="{{ url_for('static', filename='js/customer.js') }}"></script>
+    {% endblock %}

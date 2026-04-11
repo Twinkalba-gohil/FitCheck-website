@@ -1,0 +1,84 @@
+{% extends "user/base.html" %}
+ 
+{% block title %}Order Confirmed - FitCheck{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/order-success.css') }}">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Order Success Section -->
+<section class="order-success-section">
+    <div class="container">
+        
+        <div class="success-card">
+            
+            <!-- Success Icon -->
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+ 
+            <!-- Success Message -->
+            <h1>Order Placed Successfully!</h1>
+            <p>Thank you for your order. We'll send you a confirmation email shortly.</p>
+ 
+            <!-- Order Number -->
+            <div class="order-number">
+                Order Number: <strong>#{{ order.order_id }}</strong>
+            </div>
+ 
+            <!-- Delivery Info -->
+            <div class="delivery-info">
+                <h4>
+                    <i class="fas fa-truck"></i>
+                    Delivery Information
+                </h4>
+                <p><strong>Deliver to:</strong> {{ order.user.username }}</p>
+                <p>{{ order.user.address }}, {{ order.user.area_name }}</p>
+                <p>{{ order.user.city.city_name if order.user.city else 'City' }}, 
+                   {{ order.user.state.state_name if order.user.state else 'State' }} - {{ order.user.pincode }}</p>
+                <p><strong>Contact:</strong> {{ order.user.contact }}</p>
+            </div>
+ 
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Items ({{ order.order_details|length }})</span>
+                    <span>₹{{ order.total_amount }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Discount</span>
+                    <span class="discount">- ₹{{ order.discount }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>₹{{ order.ship_amount }}</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row total">
+                    <strong>Total Amount</strong>
+                    <strong class="amount">₹{{ order.net_amount }}</strong>
+                </div>
+            </div>
+ 
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ url_for('user.order_details', order_id=order.order_id) }}" class="btn-secondary">
+                    <i class="fas fa-eye"></i> View Order Details
+                </a>
+                <a href="{{ url_for('user.download_invoice', order_id=order.order_id) }}" class="btn-primary">
+                    <i class="fas fa-download"></i> Download Invoice
+                </a>
+                <a href="{{ url_for('index') }}" class="btn-secondary">
+                    <i class="fas fa-home"></i> Continue Shopping
+                </a>
+            </div>
+ 
+        </div>
+ 
+    </div>
+</section>
+ 
+{% endblock %}

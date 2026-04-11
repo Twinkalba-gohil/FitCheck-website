@@ -1,0 +1,170 @@
+{% extends "user/base.html" %}
+ 
+{% block title %}Order #{{ order.order_id }} - FitCheck{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/order-details.css') }}">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Breadcrumb -->
+<section class="breadcrumb-section">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="{{ url_for('user.my_orders') }}">My Orders</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Order #{{ order.order_id }}</span>
+        </div>
+    </div>
+</section>
+ 
+<!-- Order Details Section -->
+<section class="order-details-section">
+    <div class="container" id="con">
+        
+        <!-- Back Button -->
+        <a href="{{ url_for('user.my_orders') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to My Orders
+        </a>
+ 
+        <div class="order-card">
+            
+            <!-- Order Header -->
+            <div class="order-header">
+                <h1>Order #{{ order.order_id }}</h1>
+                <span class="status-badge {{ order.status }}">
+                    {% if order.status == 'pending' %}
+                        <i class="fas fa-clock"></i> Pending
+                    {% elif order.status == 'confirmed' %}
+                        <i class="fas fa-check"></i> Confirmed
+                    {% elif order.status == 'shipped' %}
+                        <i class="fas fa-shipping-fast"></i> Shipped
+                    {% elif order.status == 'delivered' %}
+                        <i class="fas fa-check-double"></i> Delivered
+                    {% endif %}
+                </span>
+            </div>
+ 
+            <!-- Order Info Grid -->
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>Order Date</h3>
+                    <p>{{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                </div>
+                <div class="info-box">
+                    <h3>Payment Method</h3>
+                    <p>{{ order.payment.method if order.payment else 'Cash on Delivery' }}</p>
+                </div>
+                <div class="info-box">
+                    <h3>Delivery Address</h3>
+                    <p>{{ order.user.address }}, {{ order.user.area_name }}</p>
+                    <p>{{ order.user.city.city_name if order.user.city else 'City' }}, 
+                       {{ order.user.state.state_name if order.user.state else 'State' }} - {{ order.user.pincode }}</p>
+                    <p><strong>Contact:</strong> {{ order.user.contact }}</p>
+                </div>
+                <div class="info-box">
+                    <h3>Payment Status</h3>
+                    <p>{{ order.payment.status|capitalize if order.payment else 'Pending' }}</p>
+                </div>
+            </div>
+ 
+            <!-- Order Items -->
+            <div class="order-items-section">
+                <h3>Order Items</h3>
+                <div class="order-items">
+                    {% for detail in order.order_details %}
+                    <div class="order-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='uploads/products/' + detail.product.image) }}" 
+                                 alt="{{ detail.product.pro_name }}">
+                        </div>
+                        <div class="item-details">
+                            <h4 class="item-brand">{{ detail.product.brand }}</h4>
+                            <p class="item-name">{{ detail.product.pro_name }}</p>
+                            <div class="item-meta">
+                                <span><strong>Size:</strong> {{ detail.product.size }}</span>
+                                <span><strong>Quantity:</strong> {{ detail.quantity }}</span>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            <div class="price">₹{{ detail.price * detail.quantity }}</div>
+                            <div class="unit-price">₹{{ detail.price }} × {{ detail.quantity }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+ 
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Price Details</h3>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>₹{{ order.total_amount }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Discount:</span>
+                    <span class="discount">- ₹{{ order.discount }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span>₹{{ order.ship_amount }}</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row total">
+                    <strong>Total:</strong>
+                    <strong class="amount">₹{{ order.net_amount }}</strong>
+                </div>
+            </div>
+ 
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ url_for('user.download_invoice', order_id=order.order_id) }}" class="btn-primary">
+                    <i class="fas fa-download"></i> Download Invoice
+                </a>
+                {% if order.status == 'pending' %}
+                <button onclick="cancelOrder()" class="btn-danger">
+                    <i class="fas fa-times"></i> Cancel Order
+                </button>
+                {% endif %}
+            </div>
+ 
+        </div>
+ 
+    </div>
+</section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script>
+function cancelOrder() {
+    if (!confirm('Are you sure you want to cancel this order?')) {
+        return;
+    }
+ 
+    fetch('/api/order/{{ order.order_id }}/cancel', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('Order cancelled successfully');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to cancel order');
+    });
+}
+</script>
+{% endblock %}

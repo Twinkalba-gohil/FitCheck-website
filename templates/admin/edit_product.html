@@ -1,0 +1,434 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Edit Product - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit-product.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="top-bar">
+    <div class="page-header">
+        <h1>Edit Product</h1>
+        <p>Update product details and images</p>
+    </div>
+</div>
+
+<div class="content-area">
+<div class="edit-product-container">
+
+<div class="edit-header">
+<a href="{{ url_for('admin.products') }}" class="back-btn">
+<i class="fas fa-arrow-left"></i> Back to Products
+</a>
+</div>
+
+<div class="edit-card">
+
+<form method="POST" enctype="multipart/form-data" id="editProductForm">
+
+<!-- ================= BASIC INFO ================= -->
+
+<div class="form-section">
+
+<h3 class="section-title">Basic Information</h3>
+
+<div class="form-grid">
+
+<div class="form-group full-width">
+<label>Product Name</label>
+<input type="text" name="name" class="form-input"
+value="{{ product.pro_name }}" required>
+</div>
+
+<div class="form-group full-width">
+<label>Description</label>
+<textarea name="description" class="form-textarea"
+required>{{ product.description }}</textarea>
+</div>
+
+<div class="form-group">
+<label>Brand</label>
+<input type="text" name="brand"
+value="{{ product.brand }}" class="form-input" required>
+</div>
+
+<div class="form-group">
+<label>Price (₹)</label>
+<input type="number" name="price"
+value="{{ product.base_price }}" step="0.01"
+class="form-input" required>
+</div>
+
+<div class="form-group">
+<label>Discount (%)</label>
+<input type="number"
+name="discount"
+class="form-input"
+value="{{ product.discount }}"
+min="0"
+max="90"
+required>
+</div>
+
+<div class="form-group">
+<label>Subcategory</label>
+
+<select name="subcat_id" class="form-select" required>
+
+<option value="">Select Subcategory</option>
+
+{% for subcat in subcategories %}
+
+<option value="{{ subcat.subcat_id }}"
+{% if product.subcat_id == subcat.subcat_id %}
+selected
+{% endif %}
+>
+{{ subcat.subcat_name }} ({{ subcat.type }})
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Size</label>
+
+<input type="text"
+name="size"
+class="form-input"
+value="{{ product.size }}"
+placeholder="S,M,L,XL"
+required>
+
+</div>
+
+</div>
+</div>
+
+<!-- ================= MAIN IMAGE ================= -->
+
+<div class="form-section">
+
+<h3 class="section-title">Main Product Image</h3>
+
+<div class="main-image-container">
+
+{% if product.image %}
+
+<div class="current-main-image">
+
+<img
+src="{{ url_for('static', filename='uploads/products/' + product.image) }}"
+id="mainImagePreview"
+>
+
+</div>
+
+{% else %}
+
+<div class="no-image-placeholder">
+
+<i class="fas fa-image"></i>
+<p>No main image uploaded</p>
+
+<img
+id="mainImagePreview"
+style="display:none"
+>
+
+</div>
+
+{% endif %}
+
+<div class="replace-image-section">
+
+<input type="file"
+name="main_image"
+id="mainImageInput"
+accept="image/*"
+onchange="previewMainImage(event)"
+>
+
+</div>
+
+</div>
+</div>
+
+<!-- ================= ADDITIONAL IMAGES ================= -->
+
+<div class="form-section">
+
+<h3 class="section-title">Additional Product Images</h3>
+
+{% if product.images %}
+
+<div class="existing-images-grid" id="existingImagesGrid">
+
+{% for img in product.images %}
+
+<div class="image-item" id="image-{{ img.img_id }}">
+
+<img
+src="{{ url_for('static', filename='uploads/products/' + img.image) }}"
+id="img-preview-{{ img.img_id }}"
+>
+
+<div class="image-actions">
+
+<button
+type="button"
+class="image-action-btn delete-btn"
+onclick="deleteProductImage({{ img.img_id }})"
+>
+<i class="fas fa-times"></i>
+</button>
+
+<button
+type="button"
+class="image-action-btn replace-btn"
+onclick="triggerReplaceImage({{ img.img_id }})"
+>
+<i class="fas fa-sync-alt"></i>
+</button>
+
+</div>
+
+<input
+type="file"
+id="replace-{{ img.img_id }}"
+name="replace_image_{{ img.img_id }}"
+accept="image/*"
+style="display:none"
+onchange="previewReplaceImage(event, {{ img.img_id }})"
+>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="no-images-message" id="noImagesMessage">
+
+<p>No additional images yet</p>
+
+</div>
+
+{% endif %}
+
+<div class="add-images-section">
+
+<input
+type="file"
+name="extra_images"
+id="extraImagesInput"
+accept="image/*"
+multiple
+onchange="previewExtraImages(event)"
+>
+
+<div id="newImagesPreview"></div>
+
+</div>
+
+</div>
+
+<!-- ================= BUTTONS ================= -->
+
+<div class="form-actions">
+
+<a href="{{ url_for('admin.products') }}" class="btn-cancel">
+Cancel
+</a>
+
+<button type="submit" class="btn-save">
+Update Product
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+let selectedFiles = []
+let fileCounter = 0
+
+
+function previewMainImage(event){
+
+const file = event.target.files[0]
+
+if(file){
+
+const reader = new FileReader()
+
+reader.onload = function(e){
+
+const img = document.getElementById("mainImagePreview")
+
+if(img){
+img.style.display = "block"
+img.src = e.target.result
+}
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+}
+
+
+
+function previewExtraImages(event){
+
+const files = event.target.files
+const preview = document.getElementById("newImagesPreview")
+
+for(let i=0;i<files.length;i++){
+
+const file = files[i]
+const id = fileCounter++
+
+selectedFiles.push({id:id,file:file})
+
+const reader = new FileReader()
+
+reader.onload=function(e){
+
+const div=document.createElement("div")
+
+div.className="preview-image-item"
+div.id="new-"+id
+
+div.innerHTML=`
+
+<img src="${e.target.result}" width="100">
+
+<button type="button"
+onclick="cancelNewImage(${id})"
+style="position:absolute;top:5px;right:5px;background:red;color:white;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;">
+X
+</button>
+
+`
+
+preview.appendChild(div)
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+updateFileInput()
+
+}
+
+
+
+function cancelNewImage(id){
+
+const element = document.getElementById("new-"+id)
+
+if(element){
+element.remove()
+}
+
+selectedFiles = selectedFiles.filter(f => f.id !== id)
+
+updateFileInput()
+
+}
+
+
+
+function updateFileInput(){
+
+const dt = new DataTransfer()
+
+selectedFiles.forEach(item=>{
+dt.items.add(item.file)
+})
+
+document.getElementById("extraImagesInput").files = dt.files
+
+}
+
+
+
+function triggerReplaceImage(id){
+
+document.getElementById("replace-"+id).click()
+
+}
+
+
+
+function previewReplaceImage(event,id){
+
+const file = event.target.files[0]
+
+if(file){
+
+const reader = new FileReader()
+
+reader.onload=function(e){
+
+document.getElementById("img-preview-"+id).src = e.target.result
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+}
+
+
+
+function deleteProductImage(id){
+
+if(confirm("Delete this image?")){
+
+fetch("/admin/product/image/delete/"+id,{
+method:"POST"
+})
+.then(r=>r.json())
+.then(data=>{
+
+if(data.success){
+
+const img = document.getElementById("image-"+id)
+
+if(img){
+img.remove()
+}
+
+}
+
+})
+
+}
+
+}
+
+</script>
+{% endblock %}

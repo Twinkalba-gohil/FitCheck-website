@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>FitCheck</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/offer.css') }}"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/product-card.css') }}">
+  <!-- <link rel="stylesheet" href="product.css"> -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+  <!-- contact.html link -->
+
+  {% block extra_css %}{% endblock %}
+
+
+
+</head>
+
+<body>
+  <section id="header">
+    <a href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='images/FitCheck.png') }}" class="logo" alt="">
+    </a>
+    <div>
+      <ul id="navbar">
+
+        <li class="dropdown">
+          <a href="{{ url_for('index') }}">HOME</a>
+        </li>
+
+
+        {% for cat in categories %}
+        <li class="dropdown">
+
+          <a href="{{ url_for('user.category_products', cat_id=cat.cat_id) }}">
+            {{ cat.cat_name|upper }}
+
+          </a>
+
+          <div class="dropdown_menu submenu">
+
+            {% for sub in subcategories %}
+            {% if sub.cat_id == cat.cat_id %}
+
+            <a href="{{ url_for('user.products',
+                           category=cat.cat_name|lower,
+                           subcategory=sub.subcat_name|lower) }}">
+              {{ sub.subcat_name }}
+            </a>
+
+            {% endif %}
+            {% endfor %}
+
+          </div>
+
+        </li>
+        {% endfor %}
+
+
+        <li class="dropdown">
+          <a href="{{ url_for('user.about') }}">ABOUT</a>
+        </li>
+
+        <li class="dropdown">
+          <a href="{{ url_for('user.contact') }}">CONTACT US</a>
+        </li>
+      </ul>
+    </div>
+
+    <form action="{{ url_for('user.products') }}" method="GET" id="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" name="search" placeholder="Search for products, brands..." required>
+    </form>
+
+    <div class="icon-box">
+
+      {% if session.get('u_id') %}
+
+      <a href="{{ url_for('user.profile') }}" style="text-decoration:none;color:inherit;">
+        <i class="fa-regular fa-user"></i>
+        <span>Profile</span>
+      </a>
+
+      <div class="profile-dropdown">
+        <h4>Welcome {{ session.get('username') }}</h4>
+        <p>Manage your account</p>
+
+        <a href="{{ url_for('user.profile') }}">My Profile</a>
+        <a href="{{ url_for('user.my_orders') }}">My Orders</a>
+        <a href="{{ url_for('user.logout') }}">Logout</a>
+      </div>
+
+      {% else %}
+      <i class="fa-regular fa-user"></i>
+      <span>Profile</span>
+      <div class="profile-dropdown">
+        <h4>Welcome</h4>
+        <p>To access account and manage orders</p>
+
+        <a href="{{ url_for('user.login') }}" class="login-btn">LOGIN</a>
+        <a href="{{ url_for('user.registration') }}" class="register-btn">REGISTER</a>
+      </div>
+      {% endif %}
+    </div>
+
+
+    <div class="icon-box">
+      <i class="fa-regular fa-heart"></i>
+      <span><a href="{{ url_for('user.wishlist') }}">Wishlist</a></span>
+    </div>
+
+    <div class="icon-box bag-icon-box">
+      <a href="{{ url_for('user.cart') }}" class="bag-link">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="bag-count" style="display: none;">0</span>
+      </a>
+      <span><a href="{{ url_for('user.cart') }}">Bag</a></span>
+    </div>
+    </div>
+  </section>
+      <!-- <img class="logo" src="{{ url_for('static', filename='images/FitCheck.png') }}" alt=""> -->
+
+
+
+
+
+  {% block content %}{% endblock %}
+  <footer class="section-p1">
+    <div class="col">
+      <img class="logo" src="{{ url_for('static', filename='images/FitCheck.png') }}" alt="">
+      <p class="text">Your trusted online fashion destination. We bring the latest trends and timeless <br> classics right to your doorstep with a focus on quality, affordability, and customer <br>satisfaction.</p>
+    </div>
+    <div class="col">
+      <h4>About</h4>
+      <a href="{{ url_for('user.about') }}">About Us</a>
+      <a href="{{ url_for('user.profile') }}">Delivery Information</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms & Conditions</a>
+      <a href="{{ url_for('user.contact') }}">Contact Us</a>
+    </div>
+    <div class="col">
+      <h4>My Account</h4>
+      <a href="{{ url_for('user.cart') }}">View Cart</a>
+      <a href="{{ url_for('user.wishlist') }}">My Wishlist</a>
+      <a href="{{ url_for('user.my_reviews') }}">My reviews</a>
+      <a href="{{ url_for('user.contact') }}">Help</a>
+      <!-- <a href="#">Sign In</a> -->
+      <!-- <a href="#">Track My Order</a> -->
+
+    </div>
+
+
+ <div class="col">
+      <!-- <img class="logo" src="{{ url_for('static', filename='images/FitCheck.png') }}" alt=""> -->
+      <h4>Contact</h4>
+      <P><strong>Address: </strong> 562 Wellington Road, Street 32, San Francisco</P>
+      <p><strong>Phone: </strong> +01 2222 365 /(+91) 01 2345 6789</p>
+      <p><strong>Hours: </strong> 10:00 - 18:00, Mon - Sat</p>
+      <div class="follow">
+        <h4>Follow Us</h4>
+        <div class="icon">
+          <i class="fab fa-facebook-f"></i>
+          <i class="fab fa-twitter"></i>
+          <i class="fab fa-instagram"></i>
+          <i class="fab fa-pinterest-p"></i>
+          <i class="fab fa-youtube"></i>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <!-- <div class="col install">
+      <h4>Install App</h4>
+      <p>Form App Store or Google Play</p>
+      <div class="row">
+        <img src="{{ url_for('static', filename='images/pay/app.jpg') }}" alt="">
+        <img src="{{ url_for('static', filename='images/pay/play.jpg') }}" alt="">
+      </div>
+      <p>Secured Payment Gateways</p>
+      <img src="{{ url_for('static', filename='images/pay/pay.png') }}" alt="">
+    </div> -->
+    <div class="copyright">
+      <p>© 2026, All Rights reserved</p>
+    </div>
+  </footer>
+  {% block extra_js %}
+  <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+
+  {% endblock %}
+
+
+</body>
+
+</html>

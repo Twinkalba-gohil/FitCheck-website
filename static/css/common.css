@@ -1,0 +1,713 @@
+/* ========================================
+   COMMON.CSS - Global styles, Header, Footer
+   Used on ALL pages
+   ======================================== */
+
+/* ================== GLOBAL STYLES ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #fff;
+    color: #282c3f;
+}
+
+
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ================= HEADER ================= */
+#header {
+    height: 80px;
+    width: 100%;
+    padding: 15px 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+
+    background: rgba(255, 255, 255, 0.25);
+    border-bottom: none;
+    backdrop-filter: blur(10px);
+    box-shadow: none;
+
+    transition: all 0.3s ease;
+}
+
+#header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid #ddd;
+}
+
+/* LOGO */
+.logo {
+    height: 45px;
+}
+
+/* ================= NAVBAR MENU================= */
+#navbar {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+        /* background: rgba(255, 255, 255, 0.95); /* Slight transparency */
+            /* backdrop-filter: blur(10px); Blur effect */ 
+
+
+
+}
+
+
+
+#navbar li {
+    position: relative;
+}
+
+#navbar li a {
+    position: relative;
+    text-decoration: none;
+    color: #282c3f;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    padding: 10px 0;
+    display: block;
+}
+
+/* UNDERLINE EFFECT */
+#navbar li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -5%;
+    width: 0;
+    height: 2px;
+    background-color: #ff3f6c;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+#navbar li a:hover,
+#navbar li a.active {
+    color: #ff3f6c;
+}
+
+#navbar li a.active::after,
+#navbar li a:hover::after {
+    width: 60%;
+}
+
+
+/* ================= DROPDOWN ================= */
+/* .dropdown {
+    position: relative;
+}
+
+.dropdown_menu.submenu {
+    position: absolute;
+    top: 140%;
+    left: 0;
+    background: #fff;
+    display: flex;
+    gap: 40px;
+    padding: 25px 30px;
+    min-width: 350px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: 0.4s ease;
+    z-index: 999;
+}
+
+.dropdown:hover .dropdown_menu.submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.column h4 {
+    color: #ff3f6c;
+    font-size: 13px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.column a {
+    display: block;
+    font-size: 13px;
+    color: #282c3f;
+    padding: 5px 0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.column a:hover {
+    color: #ff3f6c;
+}
+
+.dropdown_menu a::after {
+    display: none;
+}
+
+.dropdown_menu.submenu.dropdown_space {
+    min-width: 320px;
+}
+ */
+
+ /* Dropdown Container */
+.dropdown {
+    position: relative;
+}
+
+/* Dropdown Menu - 3 Column Grid */
+.dropdown_menu.submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px 30px;
+    padding: 20px 25px;
+    min-width: 450px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    z-index: 999;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown_menu.submenu {
+    display: grid;
+}
+
+/* Subcategory links */
+.dropdown_menu.submenu a {
+    display: block;
+    font-size: 14px;
+    color: #282c3f;
+    padding: 8px 0;
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.2s ease;
+}
+
+.dropdown_menu.submenu a:hover {
+    color: #ff3f6c;
+    font-weight: 500;
+}
+
+/* Remove any default styling */
+.dropdown_menu a::after {
+    display: none;
+}
+
+.dropdown > a::after {
+    display: none;
+}
+
+/* ================= SEARCH-BOX ================= */
+#search-box {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f6;
+    padding: 10px 15px;
+    border-radius: 6px;
+    max-width: 450px;
+    width: 100%;
+}
+
+#search-box i {
+    color: #7e7e7e;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#search-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 14px;
+    color: #282c3f;
+}
+
+#search-box input::placeholder {
+    color: #94969f;
+}
+
+/* ================= NAV-ICONS ================= */
+#nav-icons {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.icon-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    color: #282c3f;
+    font-size: 12px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.icon-box a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.icon-box i {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.icon-box span {
+    font-weight: 600;
+}
+
+.icon-box:hover {
+    color: #ff3f6c;
+}
+
+/*login / sign up*/
+.profile-dropdown {
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: 260px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+
+    z-index: 99;
+}
+
+.login-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #ff3f6c;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* SHOW DROPDOWN ON HOVER */
+.icon-box:hover .profile-dropdown {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* DROPDOWN CONTENT */
+.profile-dropdown h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #282c3f;
+}
+
+.profile-dropdown p {
+    font-size: 13px;
+    color: #94969f;
+    margin-bottom: 15px;
+}
+
+.profile-dropdown button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ff3f6c;
+    background: transparent;
+    color: #ff3f6c;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.profile-dropdown button:hover {
+    background: #ff3f6c;
+    color: #fff;
+}
+
+.bag-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff3f6c;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.bag-icon-box { position: relative; }
+.bag-link { position: relative; display: inline-flex; cursor: pointer; }
+
+
+.register-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: transparent;
+    color: #ff3f6c;
+    border: 1px solid #ff3f6c;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.register-btn:hover {
+    background: #ff3f6c;
+    color: white;
+}
+
+.profile-dropdown a {
+    display: block;
+    padding: 8px 0;
+    color: #282c3f;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.profile-dropdown a:hover {
+    color: #ff3f6c;
+}
+
+
+
+
+/* ================= FOOTER ================= */
+footer {
+    display: flex;
+    padding: 40px 85px 40px 85px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: #f5f5f5;
+    margin-top: 60px;
+}
+
+footer .col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+/* .col p{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;   /* limit to 3 lines */
+  /* -webkit-box-orient: vertical;
+  overflow: hidden;
+} */ */
+
+footer .logo {
+    margin-bottom: 30px;
+
+}
+
+footer h4 {
+    font-size: 14px;
+    padding-bottom: 20px;
+}
+
+footer p {
+    font-size: 13px;
+    margin: 0 0 8px 0;
+}
+
+
+footer a {
+    font-size: 13px;
+    text-decoration: none;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+footer .text{
+    margin-top: 15px;
+}
+
+footer .follow {
+    margin-top: 20px;
+}
+
+footer .follow i {
+    color: #465b52;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+footer .follow i:hover {
+    color: #ff3f6c;
+}
+
+footer .install .row img {
+    border: 1px solid #ff3f6c;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+
+footer .install img {
+    margin: 10px 0 15px 0;
+}
+
+footer .follow i:hover,
+footer a:hover {
+    color: #ff3f6c;
+}
+
+footer .copyright {
+    width: 100%;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    font-size: 13px;
+    color: #7e818c;
+}
+
+/* ================== UTILITY CLASSES ================== */
+.section-p1 {
+    padding: 40px 80px;
+}
+
+
+
+
+/* ========================================
+   PRICE DISPLAY CSS - Consistent across all pages
+   Add to product-card.css or create price.css
+   ======================================== */
+ 
+/* ========== PRODUCT CARD PRICE (Homepage, Category, Similar) ========== */
+ 
+.product-info .price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+}
+ 
+/* Final Price (Discounted) - Large, Bold, Black */
+.product-info .price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #282c3f;
+}
+ 
+/* MRP (Original Price) - Strikethrough, Gray, Smaller */
+.product-info .price .mrp {
+    font-size: 14px;
+    font-weight: 500;
+    color: #888;
+    text-decoration: line-through;
+}
+ 
+/* Discount Badge - Orange */
+.product-info .price .off,
+.product-info .discount {
+    font-size: 13px;
+    color: #ff905a;
+    font-weight: 600;
+}
+ 
+/* ========== PRODUCT DETAILS PAGE PRICE ========== */
+ 
+/* Price Section Container */
+.product-page .price {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+ 
+/* Final Price - Larger, Bold */
+.product-page .final-price {
+    font-size: 28px;
+    font-weight: 700;
+    color: #282c3f;
+}
+ 
+/* MRP (Original Price) - Strikethrough */
+.product-page .mrp {
+    font-size: 20px;
+    color: #888;
+    text-decoration: line-through;
+    font-weight: 500;
+}
+ 
+/* Discount Badge */
+.product-page .off {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ff905a;
+}
+ 
+/* Tax Note */
+.product-page .tax {
+    font-size: 13px;
+    color: #03a685;
+    margin-bottom: 25px;
+}
+ 
+/* ========== ALTERNATIVE: If using div structure ========== */
+ 
+.price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 15px 0;
+}
+ 
+.price-final {
+    font-size: 24px;
+    font-weight: 700;
+    color: #282c3f;
+}
+ 
+.price-original {
+    font-size: 18px;
+    font-weight: 500;
+    color: #888;
+    text-decoration: line-through;
+}
+ 
+.price-discount {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ff905a;
+}
+ 
+/* ========== RESPONSIVE ========== */
+ 
+@media (max-width: 768px) {
+    .product-page .final-price {
+        font-size: 24px;
+    }
+ 
+    .product-page .mrp {
+        font-size: 18px;
+    }
+ 
+    .product-page .off {
+        font-size: 14px;
+    }
+}
+ 
+.mrp{
+    text-decoration: line-through;
+    color: #777;
+    margin-left: 6px;
+}
+
+.off{
+    color: #ff3f6c;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+.final-price{
+    font-weight: 700;
+    font-size: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

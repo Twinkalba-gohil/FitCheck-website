@@ -1,0 +1,456 @@
+{% extends "user/base.html" %}
+ 
+{% block title %}Product Details{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/product-details.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/product-card.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* Reviews Section Styles */
+.reviews-section {
+  max-width: 1400px;
+  margin: 60px auto;
+  padding: 0 60px;
+}
+ 
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #eee;
+}
+ 
+.reviews-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #282c3f;
+}
+ 
+.reviews-summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+ 
+.avg-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+ 
+.avg-rating-number {
+  font-size: 28px;
+  color: #F59E0B;
+}
+ 
+.avg-rating-stars {
+  color: #F59E0B;
+  font-size: 16px;
+}
+ 
+.total-reviews {
+  font-size: 14px;
+  color: #666;
+}
+ 
+/* Individual Review Card */
+.review-card {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+ 
+.review-card:hover {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+ 
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 12px;
+}
+ 
+.reviewer-info {
+  flex: 1;
+}
+ 
+.reviewer-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #282c3f;
+  margin-bottom: 5px;
+}
+ 
+.review-rating {
+  color: #F59E0B;
+  font-size: 14px;
+}
+ 
+.review-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #535665;
+}
+ 
+/* No Reviews State */
+.no-reviews {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+ 
+.no-reviews i {
+  font-size: 60px;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+ 
+.no-reviews h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #282c3f;
+  margin-bottom: 10px;
+}
+ 
+.no-reviews p {
+  font-size: 15px;
+  color: #999;
+}
+ 
+/* Rate Product Button */
+.rate-product {
+  padding: 15px 30px;
+  border: 2px solid #F59E0B;
+  background: white;
+  color: #F59E0B;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+ 
+.rate-product:hover {
+  background: #F59E0B;
+  color: white;
+}
+ 
+.rate-product i {
+  font-size: 18px;
+}
+</style>
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- ================= PRODUCT PAGE ================= -->
+<section class="product-page">
+ 
+  <!-- LEFT : PRODUCT IMAGES -->
+  <div class="product-gallery">
+ 
+    <!-- BIG IMAGES (SIDE BY SIDE) -->
+    <div class="big-images">
+ 
+      <!-- MAIN IMAGE (never changes) -->
+      <img id="mainImg" src="{{ url_for('static', filename='uploads/products/' + product.image) }}"
+        alt="{{ product.pro_name }}">
+ 
+      <!-- SECOND IMAGE (changes when clicking thumbnails) -->
+      <img id="changeImg"
+        src="{% if product.images %}{{ url_for('static', filename='uploads/products/' + product.images[0].image) }}{% else %}{{ url_for('static', filename='uploads/products/' + product.image) }}{% endif %}"
+        alt="Product view">
+ 
+    </div>
+ 
+    <!-- THUMBNAILS -->
+    <div class="thumbs">
+      {% for img in product.images %}
+      <img class="thumb-img" src="{{ url_for('static', filename='uploads/products/' + img.image) }}">
+      {% endfor %}
+    </div>
+ 
+  </div>
+ 
+  <!-- RIGHT : PRODUCT DETAILS -->
+  <div class="product-info">
+ 
+    <h1>{{ product.brand }}</h1>
+    <p class="category">{{ product.pro_name }}</p>
+ 
+    <div class="price">
+      {% if product.discount > 0 %}
+      <span class="final-price">₹{{ product.final_price }}</span>
+      <span class="mrp">₹{{ product.base_price }}</span>
+      <span class="off">{{ product.discount }}% OFF</span>
+      {% else %}
+      <span class="final-price">₹{{ product.base_price }}</span>
+      {% endif %}
+    </div>
+    <p class="tax">inclusive of all taxes</p>
+ 
+    <!-- SIZE SELECTION -->
+    {% if product.size %}
+    <div class="size-section">
+      <h3>Select Size <span class="required">*</span></h3>
+ 
+      <div class="size-selector">
+        {% set sizes = product.size.split(',') %}
+        {% for s in sizes %}
+        <label class="size-option">
+          <input type="radio" name="size" value="{{ s.strip() }}">
+          <span>{{ s.strip() }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+ 
+    <!-- BUTTONS -->
+    <div class="buttons">
+      <button class="bag" id="addBagBtn" 
+        data-id="{{ product.pro_id }}"
+        data-has-size="{{ 'true' if product.size else 'false' }}">
+        <i class="fa-solid fa-bag-shopping"></i>
+        BAG
+      </button>
+ 
+      <button class="wish {% if in_wishlist %}active{% endif %}" id="wishBtn" 
+        data-id="{{ product.pro_id }}">
+        {% if in_wishlist %}
+          <i class="fas fa-heart"></i> WISHLISTED
+        {% else %}
+          <i class="fa-regular fa-heart"></i> WISHLIST
+        {% endif %}
+      </button>
+ 
+      <!-- RATE PRODUCT BUTTON (Only if user purchased) -->
+      {% if session.get('u_id') and has_purchased %}
+      <a href="{{ url_for('user.write_review', pro_id=product.pro_id) }}" class="rate-product">
+        <i class="fas fa-star"></i> RATE
+      </a>
+      {% endif %}
+    </div>
+ 
+    <!-- DESCRIPTION -->
+    <div class="description">
+      <h4>Product Details</h4>
+      <p id="desc">
+        {{ product.description | replace('\n','<br>') | safe }}
+      </p>
+      <span id="readMore" class="read-more">Read More</span>
+    </div>
+ 
+  </div>
+ 
+</section>
+ 
+<!-- ================= REVIEWS SECTION ================= -->
+
+
+
+<section class="reviews-section" id="reviewsSection" style="display: none;">
+  <!-- <div style="text-align: center; margin-bottom: 20px;">
+  <button id="toggleReviewsBtn" class="rate-product" style="display:none;">
+    Read More
+  </button>
+</div> -->
+<span id="toggleReviews" style="cursor:pointer; color:#F59E0B; font-weight:600;">
+  Read More
+</span>
+
+  <div class="reviews-header">
+    <h2 class="reviews-title">Customer Reviews</h2>
+    <div class="reviews-summary">
+      <div class="avg-rating">
+        <span class="avg-rating-number" id="avgRatingNumber">0</span>
+        <div class="avg-rating-stars" id="avgRatingStars"></div>
+      </div>
+      <span class="total-reviews" id="totalReviews">0 reviews</span>
+    </div>
+  </div>
+ 
+  <div id="reviewsList">
+    <!-- Reviews will be loaded here by JavaScript -->
+  </div>
+</section>
+ 
+<!-- No Reviews State -->
+<!-- <section class="reviews-section" id="noReviewsSection" style="display: none;">
+  <div class="no-reviews">
+    <i class="far fa-star"></i>
+    <h3>No Reviews Yet</h3>
+    <p>Be the first to review this product!</p>
+  </div>
+</section> -->
+ 
+<!-- ================= SIMILAR PRODUCTS ================= -->
+<section id="products-card">
+  <h2 id="pro-header-first">Similar Products</h2>
+ 
+  <div class="products" id="similar-products-container">
+ 
+    {% for p in similar_products %}
+ 
+    <div class="product-card" data-id="{{ p.pro_id }}">
+ 
+      <div class="product-img">
+        <a href="{{ url_for('user.product_details', pro_id=p.pro_id) }}">
+          <img src="{{ url_for('static', filename='uploads/products/' + p.image) }}" alt="">
+        </a>
+      </div>
+ 
+      <div class="product-info">
+ 
+        <h3>{{ p.brand }}</h3>
+ 
+        <p class="product-name">
+          <a href="{{ url_for('user.product_details', pro_id=p.pro_id) }}">
+            {{ p.pro_name }}
+          </a>
+        </p>
+ 
+        <div class="price">
+ 
+          {% if p.discount > 0 %}
+ 
+          <span class="final-price">₹{{ p.final_price }}</span>
+          <span class="mrp">₹{{ p.base_price }}</span>
+          <span class="off">{{ p.discount }}% OFF</span>
+ 
+          {% else %}
+ 
+          <span class="final-price">₹{{ p.base_price }}</span>
+ 
+          {% endif %}
+ 
+        </div>
+ 
+      </div>
+ 
+    </div>
+ 
+    {% endfor %}
+ 
+  </div>
+</section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<script src="{{ url_for('static', filename='js/product-details.js') }}"></script>
+ 
+<script>
+// Load Product Reviews
+const productId = {{ product.pro_id }};
+ 
+fetch(`/api/product-reviews/${productId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.reviews && data.reviews.length > 0) {
+            displayReviews(data);
+        } else {
+            document.getElementById('noReviewsSection').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error loading reviews:', error);
+    });
+ 
+function displayReviews(data) {
+    const reviewsSection = document.getElementById('reviewsSection');
+    const reviewsList = document.getElementById('reviewsList');
+    const avgRatingNumber = document.getElementById('avgRatingNumber');
+    const avgRatingStars = document.getElementById('avgRatingStars');
+    const totalReviews = document.getElementById('totalReviews');
+ 
+    // Show reviews section
+    reviewsSection.style.display = 'block';
+ 
+    // Update summary
+    avgRatingNumber.textContent = data.avg_rating;
+    totalReviews.textContent = `${data.total_reviews} ${data.total_reviews === 1 ? 'review' : 'reviews'}`;
+ 
+    // Display average rating stars
+    const avgRating = Math.round(data.avg_rating);
+    let starsHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= avgRating) {
+            starsHTML += '<i class="fas fa-star"></i>';
+        } else {
+            starsHTML += '<i class="far fa-star"></i>';
+        }
+    }
+    avgRatingStars.innerHTML = starsHTML;
+ 
+    // Display individual reviews
+    reviewsList.innerHTML = '';
+    data.reviews.forEach(review => {
+        const reviewCard = document.createElement('div');
+        reviewCard.className = 'review-card';
+ 
+        let reviewStarsHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= review.rating) {
+                reviewStarsHTML += '<i class="fas fa-star"></i>';
+            } else {
+                reviewStarsHTML += '<i class="far fa-star"></i>';
+            }
+        }
+ 
+        reviewCard.innerHTML = `
+            <div class="review-header">
+                <div class="reviewer-info">
+                    <div class="reviewer-name">${review.user_name}</div>
+                    <div class="review-rating">${reviewStarsHTML}</div>
+                </div>
+            </div>
+            <div class="review-text">${review.comment}</div>
+        `;
+ 
+        reviewsList.appendChild(reviewCard);
+    });
+}
+
+
+let showingAll = false;
+
+document.getElementById("toggleReviews").onclick = function () {
+    const reviews = document.querySelectorAll(".review-card");
+
+    if (!showingAll) {
+        reviews.forEach(r => r.style.display = "block");
+        this.innerText = "Read Less";
+    } else {
+        reviews.forEach((r, i) => {
+            r.style.display = (i === 0) ? "block" : "none";
+        });
+        this.innerText = "Read More";
+    }
+
+    showingAll = !showingAll;
+};
+
+document.querySelectorAll(".review-card").forEach((r, i) => {
+    if (i !== 0) r.style.display = "none";
+});
+
+
+</script>
+{% endblock %}

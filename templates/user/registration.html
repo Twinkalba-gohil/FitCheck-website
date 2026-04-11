@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - FitCheck</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/user-auth.css') }}">
+</head>
+
+<body>
+
+  <div class="auth-container">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="logo">FitCheck</div>
+      <h2>Create Account</h2>
+      <p>Sign up to start shopping</p>
+    </div>
+
+    <!-- Error/Success Messages -->
+    {% if error %}
+    <div class="error-alert">
+      <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+    {% endif %}
+
+    {% if success %}
+    <div class="success-message show">
+      <i class="fas fa-check-circle"></i> {{ success }}
+    </div>
+    {% endif %}
+
+    <!-- Registration Form -->
+    <form method="POST" class="auth-form" id="registrationForm">
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username <span class="required">*</span></label>
+        <input type="text" name="username" class="form-input" id="username" placeholder="Enter your username"
+          autocomplete="off" required>
+        <div class="error-message" id="usernameError"></div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <input type="email" name="email" class="form-input" id="email" placeholder="Enter your email"
+          autocomplete="email" required>
+        <div class="error-message" id="emailError"></div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password <span class="required">*</span></label>
+        <input type="password" name="password" class="form-input" id="password" placeholder="Create a strong password"
+          autocomplete="new-password" required>
+        <i class="fa-solid fa-eye-slash input-icon toggle-password" id="togglePassword"></i>
+        <div class="error-message" id="passwordError"></div>
+      </div>
+
+      <!-- Contact Number -->
+      <div class="form-group">
+        <label for="contact">Contact Number <span class="required">*</span></label>
+        <input type="tel" name="contact" class="form-input" id="contact" placeholder="Enter 10-digit mobile number"
+          maxlength="10" autocomplete="tel" required>
+        <div class="error-message" id="contactError"></div>
+      </div>
+
+      <!-- Address -->
+      <div class="form-group">
+        <label for="address">Address <span class="required">*</span></label>
+        <input type="text" name="address" class="form-input" id="address" placeholder="Enter your address"
+          autocomplete="street-address" required>
+        <div class="error-message" id="addressError"></div>
+      </div>
+
+      <!-- State -->
+      <div class="form-group">
+        <label for="state">State <span class="required">*</span></label>
+        <select name="state_id" class="form-input" id="state" required>
+          <option value="">Select State</option>
+          {% for state in states %}
+          <option value="{{ state.state_id }}">{{ state.state_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- City -->
+      <div class="form-group">
+        <label for="city">City <span class="required">*</span></label>
+        <select name="city_id" class="form-input" id="city" required>
+          <option value="">Select State First</option>
+        </select>
+      </div>
+
+      <!-- Area Name -->
+      <div class="form-group">
+        <label for="area_name">Area <span class="required">*</span></label>
+        <input type="text" name="area_name" class="form-input" id="area_name" placeholder="Enter your area"
+          autocomplete="off" required>
+        <div class="error-message" id="areaError"></div>
+      </div>
+
+      <!-- Pincode -->
+      <div class="form-group">
+        <label for="pincode">Pincode <span class="required">*</span></label>
+        <input type="text" name="pincode" class="form-input" id="pincode" placeholder="Enter 6-digit pincode"
+          maxlength="6" autocomplete="postal-code" required>
+        <div class="error-message" id="pincodeError"></div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="submit-btn" id="submitBtn">
+        Create Account
+      </button>
+
+    </form>
+
+    <!-- Footer -->
+    <div class="auth-footer">
+      <p>Already have an account? <a href="{{ url_for('user.login') }}">Sign In</a></p>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // Get form elements
+    const form = document.getElementById('registrationForm');
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+    const contactInput = document.getElementById('contact');
+    const pincodeInput = document.getElementById('pincode');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    if (togglePassword) {
+      togglePassword.addEventListener('click', function () {
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+    }
+
+    // Load cities when state is selected
+    stateSelect.addEventListener('change', function () {
+      const stateId = this.value;
+
+      // Clear city dropdown
+      citySelect.innerHTML = '<option value="">Loading...</option>';
+      citySelect.disabled = true;
+
+      if (stateId) {
+        // Fetch cities via AJAX
+        fetch(`/get-cities/${stateId}`)
+          .then(response => response.json())
+          .then(cities => {
+            citySelect.innerHTML = '<option value="">Select City</option>';
+
+            cities.forEach(city => {
+              const option = document.createElement('option');
+              option.value = city.city_id;
+              option.textContent = city.city_name;
+              citySelect.appendChild(option);
+            });
+
+            citySelect.disabled = false;
+          })
+          .catch(error => {
+            console.error('Error loading cities:', error);
+            citySelect.innerHTML = '<option value="">Error loading cities</option>';
+          });
+      } else {
+        citySelect.innerHTML = '<option value="">Select State First</option>';
+        citySelect.disabled = false;
+      }
+    });
+
+    // Only allow numbers in contact and pincode fields
+    contactInput.addEventListener('input', function (e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    pincodeInput.addEventListener('input', function (e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // Form validation before submit
+    form.addEventListener('submit', function (e) {
+      let isValid = true;
+
+      // Validate contact number
+      if (contactInput.value.length !== 10) {
+        alert('Please enter a valid 10-digit contact number');
+        contactInput.focus();
+        e.preventDefault();
+        return false;
+      }
+
+      // Validate pincode
+      if (pincodeInput.value.length !== 6) {
+        alert('Please enter a valid 6-digit pincode');
+        pincodeInput.focus();
+        e.preventDefault();
+        return false;
+      }
+
+      // Show loading state
+      if (isValid) {
+        submitBtn.textContent = 'Creating Account...';
+        submitBtn.disabled = true;
+      }
+    });
+
+    </script>
+
+</body>
+
+</html>

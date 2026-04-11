@@ -1,0 +1,292 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Categories - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/category.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="page-header">
+        <h1>Category Management</h1>
+        <p>Manage your product categories and subcategories</p>
+    </div>
+
+    <!-- <div class="top-bar-right">
+        <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-info">
+                <h4>Admin User</h4>
+                <p>Administrator</p>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+<!-- Content Area -->
+<div class="content-area">
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="showTab('categories', this)">
+            <i class="fas fa-folder"></i> Categories
+        </button>
+        <button class="tab-btn" onclick="showTab('subcategories', this)">
+            <i class="fas fa-layer-group"></i> Subcategories
+        </button>
+    </div>
+
+    <!-- Categories Tab -->
+    <div id="categories-tab" class="tab-content active">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">All Categories</h2>
+                <button class="action-btn" onclick="openModal('addCategoryModal')">
+                    <i class="fas fa-plus"></i> Add Category
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Category Name</th>
+                            <th>Subcategories</th>
+                            <th>Products</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                        <tr>
+                            <td><strong>#CAT-{{ category.cat_id }}</strong></td>
+                            <td class="category-name">{{ category.cat_name }}</td>
+                            <td><span class="status-badge info">{{ subcategories|selectattr('cat_id', 'equalto',
+                                    category.cat_id)|list|length }} items</span></td>
+                            <td>{{ category.products_count or 0 }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon btn-edit" onclick="editCategory('{{ category.cat_id }}')"
+                                        title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon btn-delete"
+                                        onclick="deleteCategory('{{ category.cat_id }}')" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subcategories Tab -->
+    <div id="subcategories-tab" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">All Subcategories</h2>
+                <button class="action-btn" onclick="openModal('addSubcategoryModal')">
+                    <i class="fas fa-plus"></i> Add Subcategory
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subcat ID</th>
+                            <th>Subcategory Name</th>
+                            <th>Category</th>
+                            <th>Products</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for subcat in subcategories %}
+                        <tr>
+                            <td><strong>#SUB-{{ subcat.subcat_id }}</strong></td>
+                            <td class="category-name">{{ subcat.subcat_name }}</td>
+                            <td>{{ subcat.category.cat_name }}</td>
+                            <td>{{ subcat.products_count or 0 }}</td>
+
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon btn-edit"
+                                        onclick="editSubcategory('{{ subcat.subcat_id }}')" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    <button class="btn-icon btn-delete"
+                                        onclick="deleteSubcategory('{{ subcat.subcat_id }}')" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Add Category Modal -->
+<div id="addCategoryModal" class="modal">
+    <div class="modal-overlay" onclick="closeModal('addCategoryModal')"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Category</h2>
+            <button class="modal-close" onclick="closeModal('addCategoryModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ url_for('admin.category') }}">
+            <div class="form-group">
+                <label class="form-label">Category Name</label>
+                <input type="text" name="cat_name" class="form-input" placeholder="e.g., Men, Women, Kids" required>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('addCategoryModal')">
+                    Cancel
+                </button>
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-save"></i> Save Category
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Subcategory Modal -->
+<div id="addSubcategoryModal" class="modal">
+    <div class="modal-overlay" onclick="closeModal('addSubcategoryModal')"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Subcategory</h2>
+            <button class="modal-close" onclick="closeModal('addSubcategoryModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ url_for('admin.category') }}">
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="cat_id" class="form-input" required>
+                    <option value="">Select Category</option>
+                    {% for category in categories %}
+                    <option value="{{ category.cat_id }}">{{ category.cat_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Subcategory Name</label>
+                <input type="text" name="subcat_name" class="form-input" placeholder="e.g., T-Shirts, Jeans"
+                    required>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary"
+                    onclick="closeModal('addSubcategoryModal')">Cancel</button>
+
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-save"></i> Save Subcategory
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div id="editCategoryModal" class="modal">
+    <div class="modal-overlay" onclick="closeModal('editCategoryModal')"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edit Category</h2>
+            <button class="modal-close" onclick="closeModal('editCategoryModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="editCategoryForm" onsubmit="submitEditCategory(event)">
+            <input type="hidden" id="edit_cat_id" name="cat_id">
+            
+            <div class="form-group">
+                <label class="form-label">Category Name</label>
+                <input type="text" id="edit_cat_name" name="cat_name" class="form-input" required>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('editCategoryModal')">
+                    Cancel
+                </button>
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-save"></i> Update Category
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Subcategory Modal -->
+<div id="editSubcategoryModal" class="modal">
+    <div class="modal-overlay" onclick="closeModal('editSubcategoryModal')"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edit Subcategory</h2>
+            <button class="modal-close" onclick="closeModal('editSubcategoryModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="editSubcategoryForm" onsubmit="submitEditSubcategory(event)">
+            <input type="hidden" id="edit_subcat_id" name="subcat_id">
+            
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="edit_subcat_cat_id" name="cat_id" class="form-input" required>
+                    <option value="">Select Category</option>
+                    {% for category in categories %}
+                    <option value="{{ category.cat_id }}">{{ category.cat_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Subcategory Name</label>
+                <input type="text" id="edit_subcat_name" name="subcat_name" class="form-input" required>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('editSubcategoryModal')">
+                    Cancel
+                </button>
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-save"></i> Update Subcategory
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/category.js') }}"></script>
+{% endblock %}

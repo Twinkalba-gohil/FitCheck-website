@@ -1,0 +1,367 @@
+/* ==================== GLOBAL STYLES ==================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* ==================== CONTAINER ==================== */
+    .auth-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 700px;
+      padding: 40px 35px;
+      margin: 20px;
+    }
+
+    /* ==================== HEADER ==================== */
+    .auth-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2940a5 ;
+      margin-bottom: 10px;
+    }
+
+    .auth-header h2 {
+      font-size: 24px;
+      color: #282c3f;
+      margin-bottom: 8px;
+    }
+
+    .auth-header p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* ==================== FORM ==================== */
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #282c3f;
+      margin-bottom: 4px;
+    }
+
+    .form-group label .required {
+      color: #ff3f6c;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 7px 15px;
+      font-size: 14px;
+      font-family: 'Poppins', Arial, sans-serif;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-input.error {
+      border-color: #ff3f6c;
+    }
+
+    .form-input.success {
+      border-color: #28a745;
+    }
+
+    /* Icon inside input */
+    .input-icon {
+      position: absolute;
+      right: 15px;
+      top: 41px;
+      color: #999;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .input-icon.toggle-password {
+      cursor: pointer;
+    }
+
+    /* Error message */
+    .error-message {
+      font-size: 12px;
+      color: #ff3f6c;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Radio buttons for gender */
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 8px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #667eea;
+    }
+
+    .radio-option label {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Already have account link */
+    .auth-footer {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .auth-footer p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .auth-footer a {
+      color: #667eea;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .auth-footer a:hover {
+      color: #764ba2;
+    }
+
+    /* Success message */
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid #c3e6cb;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 600px) {
+      .auth-container {
+        padding: 30px 25px;
+      }
+
+      .auth-header h2 {
+        font-size: 22px;
+      }
+
+      .radio-group {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Error Alert */
+.error-alert {
+    background: #fee;
+    color: #c33;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    border: 1px solid #fcc;
+}
+
+.error-alert i {
+    font-size: 16px;
+}
+
+/* Success Message */
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    border: 1px solid #c3e6cb;
+}
+
+.success-message.show {
+    display: flex;
+}
+
+.success-message i {
+    font-size: 16px;
+}
+
+/* Input Icon (eye icon for password) */
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.input-icon:hover {
+    color: #667eea;
+}
+
+/* Form Group with Icon */
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Error Message */
+.error-message {
+    color: #c33;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* Input Error State */
+.form-input.error {
+    border-color: #c33;
+    background: #fee;
+}
+
+/* Input Success State */
+.form-input.success {
+    border-color: #28a745;
+    background: #f0fff4;
+}
+
+/* Submit Button Loading State */
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

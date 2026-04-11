@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+venv/
+.env
+*.db
+*.sqlite3
+.vscode/
+.idea/
+static/invoices/
+config.py
+
+
+# User uploaded files (product images etc.)
+static/uploads/
+
+# Secrets backup (just in case)
+*.env.*

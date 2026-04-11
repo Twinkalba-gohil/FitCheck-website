@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Invoice #{{ order.order_id }} - FitCheck</title>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+ 
+        .invoice-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+ 
+        /* Header */
+        .invoice-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #000;
+        }
+ 
+        .invoice-header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000;
+        }
+ 
+        .header-meta {
+            font-size: 13px;
+            color: #666;
+        }
+ 
+        .header-meta span {
+            display: inline-block;
+            margin-right: 30px;
+        }
+ 
+        /* Info Section */
+        .info-section {
+            width: 100%;
+            margin: 20px 0;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+        }
+ 
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+ 
+        .info-table td {
+            vertical-align: top;
+            padding: 10px;
+            width: 33.33%;
+        }
+ 
+        .info-box h3 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #000;
+        }
+ 
+        .info-box p {
+            font-size: 12px;
+            margin: 3px 0;
+            color: #333;
+            line-height: 1.6;
+        }
+ 
+        /* Summary Rows */
+        .summary-row {
+            font-size: 12px;
+            margin: 4px 0;
+            clear: both;
+        }
+ 
+        .summary-row span:first-child {
+            float: left;
+        }
+ 
+        .summary-row span:last-child {
+            float: right;
+        }
+ 
+        .summary-row.total {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #ddd;
+        }
+ 
+        .summary-row.discount span:last-child {
+            color: #B12704;
+        }
+ 
+        .summary-row.grand-total {
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+ 
+        /* Arriving Section */
+        .arriving-section {
+            margin: 20px 0 15px 0;
+        }
+ 
+        .arriving-section h2 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+        }
+ 
+        /* Items Section */
+        .items-section {
+            margin: 20px 0;
+        }
+ 
+        .item-row {
+            page-break-inside: avoid;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            /* border-bottom: 1px solid #e0e0e0; */
+        }
+ 
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+ 
+        .item-table td {
+            vertical-align: top;
+            padding: 5px;
+        }
+ 
+        .item-image {
+            width: 100px;
+        }
+ 
+        .item-image img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+        }
+ 
+        .item-details h4 {
+            font-size: 14px;
+            font-weight: normal;
+            color: #007185;
+            margin-bottom: 5px;
+        }
+ 
+        .item-details p {
+            font-size: 12px;
+            color: #666;
+            margin: 3px 0;
+        }
+ 
+        .item-price {
+            font-weight: bold;
+            color: #000;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+ 
+        /* Footer */
+        .invoice-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            /* border-top: 1px solid #ddd; */
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+ 
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .invoice-actions {
+                display: none !important;
+            }
+        }
+ 
+        /* Browser view buttons */
+        .invoice-actions {
+            margin-top: 20px;
+            padding-top: 20px;
+            /* border-top: 1px solid #ddd; */
+            text-align: center;
+        }
+ 
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            border: 1px solid #888;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            border-radius: 3px;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+ 
+        .btn:hover {
+            background: #f7f7f7;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        
+        <!-- Header -->
+        <div class="invoice-header">
+            <h1>Order Summary</h1>
+            <div class="header-meta">
+                <span>Order placed {{ order.created_at.strftime('%d %B %Y') }}</span>
+                <span>Order number {{ order.order_id }}</span>
+            </div>
+        </div>
+ 
+        <!-- Info Section (3 columns) -->
+        <div class="info-section">
+            <table class="info-table">
+                <tr>
+                    <!-- Ship to -->
+                    <td>
+                        <div class="info-box">
+                            <h3>Ship to</h3>
+                            <p><strong>{{ order.user.username }}</strong></p>
+                            <p>{{ order.user.address }}</p>
+                            <p>{{ order.user.area_name }}</p>
+                            <p>{{ order.user.city.city_name if order.user.city else 'City' }}, {{ order.user.state.state_name if order.user.state else 'State' }} {{ order.user.pincode }}</p>
+                            <p>India</p>
+                        </div>
+                    </td>
+ 
+                    <!-- Payment method -->
+                    <td>
+                        <div class="info-box">
+                            <h3>Payment method</h3>
+                            <p>{{ order.payment.method if order.payment else 'Cash on Delivery' }}</p>
+                        </div>
+                    </td>
+ 
+                    <!-- Order Summary -->
+                    <td>
+                        <div class="info-box">
+                            <h3>Order Summary</h3>
+                            <div class="summary-row">
+                                <span>Item(s) Subtotal:</span>
+                                <span>Rs.{{ "%.2f"|format(order.total_amount)
+                                 }}</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping:</span>
+                                <span>Rs.{{ "%.2f"|format(order.ship_amount) }}</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span>Rs.{{ "%.2f"|format(order.total_amount + order.ship_amount) }}</span>
+                            </div>
+                            {% if order.discount > 0 %}
+                            <div class="summary-row discount">
+                                <span>Promotion Applied:</span>
+                                <span>-Rs.{{ order.discount }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="summary-row grand-total">
+                                <span>Grand Total:</span>
+                                <span>Rs.{{ order.net_amount }}</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+ 
+        <!-- Arriving Section -->
+        <div class="arriving-section">
+            <h2>Order Details</h2>
+        </div>
+ 
+        <!-- Items Section -->
+        <div class="items-section">
+            {% for detail in order.order_details %}
+            <div class="item-row">
+                <table class="item-table">
+                    <tr>
+                        <td class="item-image">
+                            <img src="{{ request.url_root }}static/uploads/products/{{ detail.product.image }}" 
+                                 alt="{{ detail.product.pro_name }}">
+                        </td>
+                        <td>
+                            <div class="item-details">
+                                <h4>{{ detail.product.pro_name }}</h4>
+                                <p>Brand: {{ detail.product.brand }}</p>
+                                <p>Quantity: {{ detail.quantity }}</p>
+                                <p class="item-price"> {{ detail.price }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+ 
+        <!-- Footer -->
+        <div class="invoice-footer">
+            <p>Thank you for shopping with FitCheck!</p>
+            <p>For any queries, contact us at support@fitcheck.com</p>
+        </div>
+ 
+        <!-- Action Buttons (Browser View Only) -->
+        {% if not download %}
+        <div class="invoice-actions">
+            <button onclick="window.print()" class="btn">Print / Save as PDF</button>
+            <a href="{{ url_for('user.my_orders') }}" class="btn">Back to Orders</a>
+        </div>
+        {% endif %}
+ 
+    </div>
+ 
+    {% if not download %}
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

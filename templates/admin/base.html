@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCheck - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    {% block extra_css %}
+    {% endblock %}
+</head>
+
+<body>
+
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/FitCheck.png') }}" alt="FitCheck Logo"
+                        class="logo-img">
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="{{ url_for('admin.dashboard') }}"
+                        class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}"> <i
+                            class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{{ url_for('admin.products') }}"
+                        class="nav-item {% if request.endpoint == 'admin.products' %}active{% endif %}"> <i
+                            class="fas fa-box"></i>
+                        <span>Products</span>
+                        <span class="nav-badge">{{ products_count }}</span>
+                    </a>
+
+                    <a href="{{ url_for('admin.orders') }}"
+                        class="nav-item {% if request.endpoint == 'admin.orders' or request.endpoint == 'admin.order_details' %}active{% endif %}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Orders</span>
+                        <span class="nav-badge">{{ orders_count }}</span>
+                        
+                    </a> <a href="{{ url_for('admin.customers') }}"
+                        class="nav-item {% if request.endpoint == 'admin.customers' %}active{% endif %}"> <i
+                            class="fas fa-users"></i>
+                        <span>Customers</span>
+                    </a>
+
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <a href="{{ url_for('admin.category') }}"
+                        class="nav-item {% if request.endpoint == 'admin.category' %}active{% endif %}">
+                        <i class="fas fa-tags"></i>
+                        <span>Categories</span>
+                    </a>
+                    <a href="{{ url_for('admin.reviews') }}"
+                        class="nav-item {% if request.endpoint == 'admin.reviews' %}active{% endif %}">
+                       <i class="fas fa-comments"></i>
+                        <span>Feedback</span>
+                    </a>
+                    <!-- <a href="#" class="nav-item">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Inventory</span>
+                    </a> -->
+                    
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Other</div>
+
+                    <a href="{{ url_for('admin.logout') }}" class="nav-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+    </div>
+    {% block extra_js %}{% endblock %}
+
+
+</body>
+
+</html>

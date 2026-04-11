@@ -1,0 +1,210 @@
+{% extends "admin/base.html" %}
+{% block title %}Products{% endblock %}
+{%block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_pro.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}" />
+
+{% endblock %}
+
+<!-- Add/Edit Product Modal -->
+<div class="product-form-container">
+    <div class="modal-header">
+        <h2 id="modalTitle">Add New Product</h2>
+        <!-- <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button> -->
+        <a href="{{ url_for('admin.products') }}" class="modal-close"><i class="fas fa-times"></i></a>
+    </div>
+    <!-- <form class="modal-body" id="productForm"> -->
+    <form method="POST" action="{{ url_for('admin.add_product') }}" enctype="multipart/form-data" class="modal-body"
+        id="productForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" name="name" class="form-input" placeholder="Enter product name" required />
+            </div>
+
+            <div class="form-group full-width">
+                <label>Description</label>
+                <textarea name="description" class="form-input" rows="3" placeholder="Enter product description"
+                    required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Price</label>
+                <input type="number" name="price" class="form-input" placeholder="0.00" step="0.01" required />
+            </div>
+
+            <div class="form-group">
+                <label>Discount(%)</label>
+                <input type="number" name="discount" class="form-input" placeholder="Enter brand name" min="0" max="90" required />
+            </div>
+
+            <div class="form-group">
+                <label>Brand</label>
+                <input type="text" name="brand" class="form-input" placeholder="Enter brand name" required />
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select name="cat_id" class="form-input" id="catSelect" required>
+                    <option value="">Select Category</option>
+                    {% for c in Categories %}
+                    <option value="{{ c.cat_id }}">
+                        {{ c.cat_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Sub-Category</label>
+                <select name="subcat_id" class="form-input" id="subcatSelect" required>
+                    <option value="">Select Sub-Category</option>
+                    {% for s in subcategories %}
+                    <option value="{{ s.subcat_id }}" data-cat="{{ s.cat_id }}">
+                        {{ s.subcat_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Available Sizes topware</label>
+                <div class="size-selector">
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="XS" />
+                        <span>XS</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="S" />
+                        <span>S</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="M" />
+                        <span>M</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="L" />
+                        <span>L</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="XL" />
+                        <span>XL</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="XXL" />
+                        <span>XXL</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Available Sizes bottom-ware</label>
+                <div class="size-selector">
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="28" />
+                        <span>28</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="30" />
+                        <span>30</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="32" />
+                        <span>32</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="34" />
+                        <span>34</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="36" />
+                        <span>36</span>
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="form-group full-width">
+                <label>Available Sizes shoes</label>
+                <div class="size-selector">
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="7" />
+                        <span>7</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="8" />
+                        <span>8</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="9" />
+                        <span>9</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="10" />
+                        <span>10</span>
+                    </label>
+                    <label class="size-option">
+                        <input type="checkbox" name="size" value="11" />
+                        <span>11</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Product Image</label>
+
+                <div class="file-upload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload or drag and drop</p>
+                    <input type="file" name="image" accept="image/*" required />
+                    <!-- <input type="file" name="images" multiple accept="image/*" required> -->
+                </div>
+
+
+                <div class="file-upload">
+                    <label>Other Product Images (Product Details)</label>
+                    <input type="file" name="images" multiple accept="image/*">
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+            <!-- <button type="button" class="btn-cancel" onclick="closeModal()">
+                        Cancel
+                    </button> -->
+            <a href="{{ url_for('admin.products') }}" class="btn-cancel">Cancel</a>
+            <button type="submit" class="btn-save">Save Product</button>
+        </div>
+    </form>
+</div>
+</div>
+
+
+<script>
+    const catSelect = document.getElementById("catSelect");
+    const subcatSelect = document.getElementById("subcatSelect");
+
+    catSelect.addEventListener("change", function () {
+        const selectedCat = this.value;
+
+        Array.from(subcatSelect.options).forEach(option => {
+            if (!option.value) return; // skip "Select Sub-Category"
+
+            if (option.dataset.cat === selectedCat) {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        });
+
+        subcatSelect.value = ""; // reset subcategory selection
+    });
+</script>
+<!-- <script src="{{ url_for('static', filename='js/products.js') }}"></script> -->
+
+{% endblock %}

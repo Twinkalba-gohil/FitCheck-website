@@ -1,0 +1,89 @@
+{% extends "user/base.html" %}
+ 
+{% block title %}Shopping Bag - FitCheck{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Breadcrumb -->
+<section id="breadcrumb">
+    <div class="breadcrumb-container">
+        <a href="{{ url_for('index') }}">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Shopping Bag</span>
+    </div>
+</section>
+ 
+<!-- Cart Content -->
+<section id="cart-section">
+    <div class="cart-container">
+        
+        <!-- Left Side - Cart Items -->
+        <div class="cart-items-section">
+            <div class="cart-header">
+                <h2>Shopping Bag</h2>
+                <span class="item-count" id="cartItemCount">0 Items</span>
+            </div>
+ 
+            <!-- Cart Items Container -->
+            <div id="cartItemsContainer">
+                <!-- Items will be loaded here by JavaScript -->
+            </div>
+ 
+            <!-- Empty Cart Message -->
+            <div id="emptyCartMessage" class="empty-cart" style="display: none;">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>Your bag is empty</h3>
+                <p>Add items to get started!</p>
+                <a href="{{ url_for('index') }}" class="continue-shopping-btn">
+                    <i class="fas fa-arrow-left"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+ 
+        <!-- Right Side - Price Summary -->
+        <div class="cart-summary-section">
+            <div class="summary-card">
+                <h3>Price Details</h3>
+                
+                <div class="summary-row">
+                    <span>Total MRP</span>
+                    <span id="totalMRP">₹0</span>
+                </div>
+ 
+                <div class="summary-row">
+                    <span>Discount on MRP</span>
+                    <span class="discount-text" id="totalDiscount">-₹0</span>
+                </div>
+ 
+                <div class="summary-row">
+                    <span>Delivery Charges</span>
+                    <span class="free-text" id="deliveryCharges">
+                        <span id="deliveryAmount">FREE</span>
+                    </span>
+                </div>
+ 
+                <div class="summary-divider"></div>
+ 
+                <div class="summary-row total-row">
+                    <span>Total Amount</span>
+                    <span id="totalAmount">₹0</span>
+                </div>
+ 
+                <button class="checkout-btn" onclick="proceedToCheckout()">
+                    <i class="fas fa-lock"></i> PLACE ORDER
+                </button>
+            </div>
+        </div>
+ 
+    </div>
+</section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+{% endblock %}
