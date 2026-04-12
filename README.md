@@ -93,7 +93,10 @@
 ## 🛠️ Admin Features
 
 ### 🔐 Admin Authentication
-- Secure admin login system  
+- Secure admin login system
+
+![login](screenshots/login.png)
+
 
 ### 📊 Dashboard Analytics
 - View total users, products, orders  
@@ -148,11 +151,7 @@
 - Filter by rating  
 - Delete inappropriate reviews
 
-![feedback-1](screenshots/feedback-1.png)
-
-![feedback-2](screenshots/feedback-2.png)
-
-![feedback-3](screenshots/feedback-3.png)
+![feedback-1](screenshots/feedback.png)
 
 
 ---
