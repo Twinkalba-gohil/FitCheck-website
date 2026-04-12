@@ -20,7 +20,14 @@
 
 ### 🛍️ Product Browsing
 - View all products with categories & subcategories  
-- Search by product name, brand, or category  
+- Search by product name, brand, or category
+
+![home](screenshots/home.png)
+
+![home-products](screenshots/home-products.png)
+
+![category](screenshots/category.png)
+
 
 ### ❤️ Wishlist System
 - Add/remove products to wishlist  
