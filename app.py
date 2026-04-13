@@ -10,8 +10,11 @@ from models.category import Category, SubCategory
 
 def create_app():
     app = Flask(__name__)
+       # Load config
     app.config.from_object(Config)
-    print(app.config["SQLALCHEMY_DATABASE_URI"])
+
+    # DEBUG: check secret key (remove later)
+    print("SECRET KEY:", app.config["SECRET_KEY"])
 
 
     app.permanent_session_lifetime = timedelta(days=30)
@@ -82,4 +85,4 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
