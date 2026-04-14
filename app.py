@@ -14,7 +14,7 @@ def create_app():
     app.config.from_object(Config)
 
     # DEBUG: check secret key (remove later)
-    print("SECRET KEY:", app.config["SECRET_KEY"])
+    app.config["SECRET_KEY"]
 
 
     app.permanent_session_lifetime = timedelta(days=30)
